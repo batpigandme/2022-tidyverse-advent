@@ -1,0 +1,20 @@
+project:
+  type: website
+
+website:
+  title: "Tidyverse advent 2022"
+  navbar:
+    right:
+      - about.qmd
+      - icon: github
+        href: https://github.com/tidyverse
+format:
+  html:
+    theme: 
+      - cosmo
+      - custom.scss
+    css: styles.css
+
+freeze: true
+      
+

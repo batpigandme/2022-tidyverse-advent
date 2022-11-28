@@ -1,0 +1,17 @@
+/*-- scss:defaults --*/
+// manually set primary
+$primary: #812929 !default;
+
+// Navbar
+$navbar-bg: black !default;
+$navbar-fg: rgba(255, 255, 255, 0.8) !default;
+$navbar-hl: white !default;
+
+// Embolden headings
+$headings-font-weight: 600 !default;
+
+// Code styles
+// inline code text color
+$code-color: #844aa1 !default;
+// color for code copy button on hover
+$code-copy-hover-color: #b1b7bc !default;
