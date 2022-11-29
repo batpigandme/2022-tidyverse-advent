@@ -1,15 +1,15 @@
 ---
-title: "Tidyverse advent 2022"
+title: "A very tidy advent: 2022"
+description: "25 days of tidyverse/r-lib functions, tips, and tricks."
 listing:
   contents: posts
   sort: "date desc"
   type: grid
-  categories: true
+  fields: [image, title, subtitle, reading-time, categories, description, date]
+  categories: false
   sort-ui: false
   filter-ui: false
+  date-format: iso
 page-layout: full
-title-block-banner: true
+title-block-banner: false
 ---
-
-
-# 25 days of tidyverse functions
