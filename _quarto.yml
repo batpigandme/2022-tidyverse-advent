@@ -2,13 +2,14 @@ project:
   type: website
 
 website:
-  title: "A very tidy advent: 2022"
+  title: "A very tidy advent 2022"
   description: "25 days of tidyverse/r-lib functions, tips, and tricks."
   navbar:
     right:
       - about.qmd
       - icon: github
         href: https://github.com/tidyverse
+        aria-label: Tidyverse GitHub page
 format:
   html:
     theme: 

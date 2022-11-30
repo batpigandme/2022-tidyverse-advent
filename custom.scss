@@ -1,4 +1,15 @@
 /*-- scss:defaults --*/
+//== Typography
+//## Font, line-height, and color for body text, headings, and more.
+$font-size-root: 1.2em;
+// import Lato
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400;1,700&display=swap');
+$font-family-sans-serif: Lato, sans-serif !default;
+// import Roboto Mono
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap");
+$font-family-monospace: "Roboto Mono", SFMono-Regular, Menlo, Monaco, Consolas,
+  monospace !default;
+  
 // manually set primary
 $primary: #812929 !default;
 
@@ -15,3 +26,77 @@ $headings-font-weight: 600 !default;
 $code-color: #844aa1 !default;
 // color for code copy button on hover
 $code-copy-hover-color: #b1b7bc !default;
+
+//
+// Color system
+//
+// bootstrap default colors
+$bs-body-color: rgb(55, 58, 60) !default;
+$white: #ffffff !default;
+$black: #000000 !default;
+$red: #dc3545 !default;
+$teal: #20c997 !default;
+$blue: #2780e3 !default;
+$gray-700: #495057 !default;
+// IBM carbon
+$coolgray-60: #697077 !default;
+$coolgray-70: #4d5358 !default;
+$coolgray-80: #343a3f !default;
+
+// The contrast ratio to reach against white, to determine if color changes from "light" to "dark". Acceptable values for WCAG 2.0 are 3, 4.5 and 7.
+// See https://www.w3.org/TR/WCAG20/#visual-audio-contrast-contrast
+$min-contrast-ratio: 4.5 !default;
+
+// Customize the light and dark text colors for use in our color contrast function.
+// See https://github.com/twbs/bootstrap/blob/612d235faf3515dacceb19df04f1d32b9ef62c55/scss/_functions.scss#L146-L196
+$color-contrast-dark: $black !default;
+$color-contrast-light: $white !default;
+
+// Links
+//
+// Style anchor elements.
+// re-implement from BS so bold code hover works
+$link-color: $primary !default;
+$link-shade-percentage: 20% !default;
+$link-hover-color: shift-color($link-color, $link-shade-percentage) !default;
+
+/* -- scss:mixins --*/
+@mixin link-style {
+  color: $link-color;
+  text-decoration: none;
+  border-bottom: 1px solid $link-color;
+}
+
+@mixin link-hover-style {
+  color: $link-hover-color;
+  text-decoration: none;
+  border-bottom: 1px solid $link-hover-color;
+}
+
+/*-- scss:rules --*/
+
+// begin link section
+// link color and hover
+p a,
+aside a {
+  @include link-style;
+  &:hover {
+    @include link-hover-style;
+  }
+}
+
+// code font links
+p a code:not(.sourceCode) {
+  @include link-style;
+  padding: 0em;
+  border-bottom: none;
+  &:hover {
+    @include link-hover-style;
+    border-bottom: none;
+  }
+}
+
+// deal with getting the category tags to be darker
+.quarto-title .quarto-categories .quarto-category a {
+    color: black;
+}
