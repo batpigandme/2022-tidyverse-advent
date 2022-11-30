@@ -6,7 +6,6 @@ website:
   description: "25 days of tidyverse/r-lib functions, tips, and tricks."
   navbar:
     right:
-      - about.qmd
       - icon: github
         href: https://github.com/tidyverse
         aria-label: Tidyverse GitHub page
