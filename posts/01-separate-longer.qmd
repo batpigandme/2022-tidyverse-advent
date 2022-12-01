@@ -1,0 +1,81 @@
+---
+title: "Day 1: `separate_longer_*()`"
+date: "2022-12-01"
+description:  |
+  Learn about tidyr's `separate_longer_*()` functions which separate strings into multiple rows.
+tags: 
+  - tidyr
+  - functions
+image: "song_artist_longer_transform_unnest_longer_separate_longer-min.png"
+image-alt: "The nested data frame (left), with a song column, and a list column with artists is transformed into a data frame with one artist and song per column by using the unnest_longer() function. Data frame (right) with comma-delimited strings in artist column transformed to tidy output with separate_longer_delim()."
+---
+
+Depending on how you get your data, the "tidying" process can take different forms. Much of the focus in the tidyr [@tidyr] documentation (e.g. in the [Rectangling vignette](https://tidyr.tidyverse.org/articles/rectangle.html)) focuses on dealing with *nested* data[^1].
+
+Today you'll see how the new [`separate_longer_*()`](https://tidyr.tidyverse.org/dev/reference/separate_longer_delim.html) family of functions[^2] (formerly [`separate_rows()`](https://tidyr.tidyverse.org/reference/separate_rows.html)) can be used to unpack data that's not nested, but, rather, has multiple strings to achieve what [`unnest_longer()`](https://tidyr.tidyverse.org/reference/hoist.html) does for nested data.
+
+We're going to look at the same data in two different formats: one where strings have been nested in a list column, and the other where there are multiple strings in a character column.
+
+## The nested version
+
+First, let's create a nested version.
+
+```{r}
+#| label: libs
+#| message: false
+library(tidyverse)
+```
+
+```{r nested-df}
+#| label: nested-df
+nested_df <- tibble(
+  song = c("Rake it Up", "Bang Bang", "Side to Side"),
+  artist = list(c("Yo Gotti", "Nicki Minaj"), c("Jessie J", "Ariana Grande", "Nicki Minaj"), c("Ariana Grande", "Nicki Minaj"))
+)
+
+nested_df
+```
+
+As you can see, we have three songs, and an `artist` column which contains the lists of artists on each song.
+
+To tidy this up, we'll use `unnest_longer()`.
+
+```{r}
+#| label: unnest-longer
+nested_df %>%
+  unnest_longer(artist)
+```
+
+## The multiple-strings in a row version
+
+Now let's look at the same data in a different shape of sorts---one in which the artists are stored as a single character string separated by commas.
+
+```{r}
+#| label: stringy-df
+stringy_df <- tibble(
+  song = c("Rake it Up", "Bang Bang", "Side to Side"),
+  artist = c("Yo Gotti, Nicki Minaj", "Jessie J, Ariana Grande, Nicki Minaj", "Ariana Grande, Nicki Minaj")
+)
+
+stringy_df
+```
+
+We can use `separate_longer_delim()` along with the `delim` argument to get the same result for this data frame that we did for the nested one.
+
+```{r}
+#| label: separate-longer
+stringy_df %>%
+  separate_longer_delim(artist, delim = ", ")
+```
+
+## Different inputs, same output
+
+The diagram below illustrates how the two different data frames each produced the same result by using the relevant functions.
+
+![Nested data frame transformed to tidy output using `unnest_longer()`.](song_artist_longer_transform_unnest_longer-min.png){fig-alt="The nested data frame, with a song column, and a list column with artists is transformed into a data frame with one artist and song per column by using the unnest_longer() function."}
+
+![Data frame with comma-delimited strings in artist column transformed to tidy output with `separate_longer_delim()`.](song_artist_longer_transform_separate_longer-min.png){fig-alt="A data frame with two columns, song and artist that contains multiple artists in the artist column as a string separated by rows is transformed into a tidy data frame using separate_longer_delim()."}
+
+[^1]: This makes sense, given that wild-caught data from JSON and XML are often deeply nested.
+
+[^2]: Note that you'll need to install the development version of tidyr in order to use these functions.

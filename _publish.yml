@@ -1,0 +1,4 @@
+- source: project
+  quarto-pub:
+    - id: 47978eef-f5ae-44ac-92be-eefd0f4ffb9c
+      url: 'https://mara.quarto.pub/tidy-advent-2022'

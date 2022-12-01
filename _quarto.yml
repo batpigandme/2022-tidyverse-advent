@@ -9,6 +9,8 @@ website:
       - icon: github
         href: https://github.com/tidyverse
         aria-label: Tidyverse GitHub page
+  open-graph:
+    locale: en_US
 format:
   html:
     theme: 
