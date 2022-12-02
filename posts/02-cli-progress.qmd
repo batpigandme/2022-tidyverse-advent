@@ -56,4 +56,10 @@ This post is just a quick highlight reel, check out cli's progress-bar vignettes
 
 ## Progress bar basics
 
-To lift straight from the progress-bar intro vignette,
+To lift straight from the [progress-bar intro vignette](https://cli.r-lib.org/articles/progress.html), adding a progress bar is a three-step/three-function process:
+
+1.  Call [`cli_progress_bar()`](https://cli.r-lib.org/reference/cli_progress_bar.html) to create a progress bar.
+
+2.  Call [`cli_progress_update()`](https://cli.r-lib.org/reference/cli_progress_bar.html) to update it.
+
+3.  Call [`cli_progress_done()`](https://cli.r-lib.org/reference/cli_progress_bar.html) to terminate it.
