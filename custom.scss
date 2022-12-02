@@ -100,3 +100,11 @@ p a code:not(.sourceCode) {
 .quarto-title .quarto-categories .quarto-category a {
     color: black;
 }
+
+// figcaption color and font size
+.panel-caption,
+.figure-caption,
+figcaption {
+  color: $gray-700;
+  font-size: 0.925rem;
+}
