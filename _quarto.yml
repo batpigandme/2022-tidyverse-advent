@@ -3,9 +3,13 @@ project:
 
 website:
   title: "A very tidy advent 2022"
-  description: "25 days of tidyverse/r-lib functions, tips, and tricks."
+  site-url: https://mara.quarto.pub/tidy-advent-2022/
+  description: "25 days of tidyverse and r-lib functions, tips, and tricks."
   navbar:
     right:
+      - icon: rss-fill
+        href: index.xml
+        aria-label: RSS feed
       - icon: github
         href: https://github.com/tidyverse
         aria-label: Tidyverse GitHub page

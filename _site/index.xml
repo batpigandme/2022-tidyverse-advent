@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss  xmlns:atom="http://www.w3.org/2005/Atom" 
+      xmlns:media="http://search.yahoo.com/mrss/" 
+      xmlns:content="http://purl.org/rss/1.0/modules/content/" 
+      xmlns:dc="http://purl.org/dc/elements/1.1/" 
+      version="2.0">
+<channel>
+<title>A very tidy advent 2022</title>
+<link>https://mara.quarto.pub/tidy-advent-2022/index.html</link>
+<atom:link href="https://mara.quarto.pub/tidy-advent-2022/index.xml" rel="self" type="application/rss+xml"/>
+<description>25 days of tidyverse and r-lib functions, tips, and tricks.</description>
+<generator>quarto-99.9.9</generator>
+<lastBuildDate>Thu, 01 Dec 2022 07:00:00 GMT</lastBuildDate>
+<item>
+  <title>Day 1: separate_longer_*()</title>
+  <link>https://mara.quarto.pub/tidy-advent-2022/posts/01-separate-longer.html</link>
+  <description><![CDATA[ 
+
+
+
+<p>Depending on how you get your data, the “tidying” process can take different forms. Much of the focus in the tidyr <span class="citation" data-cites="tidyr">(Wickham and Girlich 2022)</span> documentation (e.g.&nbsp;in the <a href="https://tidyr.tidyverse.org/articles/rectangle.html">Rectangling vignette</a>) focuses on dealing with <em>nested</em> data<sup>1</sup>.</p>
+<p>Today you’ll see how the new <a href="https://tidyr.tidyverse.org/dev/reference/separate_longer_delim.html"><code>separate_longer_*()</code></a> family of functions<sup>2</sup> (formerly <a href="https://tidyr.tidyverse.org/reference/separate_rows.html"><code>separate_rows()</code></a>) can be used to unpack data that’s not nested, but, rather, has multiple strings to achieve what <a href="https://tidyr.tidyverse.org/reference/hoist.html"><code>unnest_longer()</code></a> does for nested data.</p>
+<p>We’re going to look at the same data in two different formats: one where strings have been nested in a list column, and the other where there are multiple strings in a character column.</p>
+<section id="the-nested-version" class="level2">
+<h2 class="anchored" data-anchor-id="the-nested-version">The nested version</h2>
+<p>First, let’s create a nested version.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;">library</span>(tidyverse)</span></code></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1">nested_df <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">tibble</span>(</span>
+<span id="cb2-2">  <span class="at" style="color: #657422;">song =</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="st" style="color: #20794D;">"Rake it Up"</span>, <span class="st" style="color: #20794D;">"Bang Bang"</span>, <span class="st" style="color: #20794D;">"Side to Side"</span>),</span>
+<span id="cb2-3">  <span class="at" style="color: #657422;">artist =</span> <span class="fu" style="color: #4758AB;">list</span>(<span class="fu" style="color: #4758AB;">c</span>(<span class="st" style="color: #20794D;">"Yo Gotti"</span>, <span class="st" style="color: #20794D;">"Nicki Minaj"</span>), <span class="fu" style="color: #4758AB;">c</span>(<span class="st" style="color: #20794D;">"Jessie J"</span>, <span class="st" style="color: #20794D;">"Ariana Grande"</span>, <span class="st" style="color: #20794D;">"Nicki Minaj"</span>), <span class="fu" style="color: #4758AB;">c</span>(<span class="st" style="color: #20794D;">"Ariana Grande"</span>, <span class="st" style="color: #20794D;">"Nicki Minaj"</span>))</span>
+<span id="cb2-4">)</span>
+<span id="cb2-5"></span>
+<span id="cb2-6">nested_df</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 2
+  song         artist   
+  &lt;chr&gt;        &lt;list&gt;   
+1 Rake it Up   &lt;chr [2]&gt;
+2 Bang Bang    &lt;chr [3]&gt;
+3 Side to Side &lt;chr [2]&gt;</code></pre>
+</div>
+</div>
+<p>As you can see, we have three songs, and an <code>artist</code> column which contains the lists of artists on each song.</p>
+<p>To tidy this up, we’ll use <code>unnest_longer()</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1">nested_df <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb4-2">  <span class="fu" style="color: #4758AB;">unnest_longer</span>(artist)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 7 × 2
+  song         artist       
+  &lt;chr&gt;        &lt;chr&gt;        
+1 Rake it Up   Yo Gotti     
+2 Rake it Up   Nicki Minaj  
+3 Bang Bang    Jessie J     
+4 Bang Bang    Ariana Grande
+5 Bang Bang    Nicki Minaj  
+6 Side to Side Ariana Grande
+7 Side to Side Nicki Minaj  </code></pre>
+</div>
+</div>
+</section>
+<section id="the-multiple-strings-in-a-row-version" class="level2">
+<h2 class="anchored" data-anchor-id="the-multiple-strings-in-a-row-version">The multiple-strings in a row version</h2>
+<p>Now let’s look at the same data in a different shape of sorts—one in which the artists are stored as a single character string separated by commas.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1">stringy_df <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">tibble</span>(</span>
+<span id="cb6-2">  <span class="at" style="color: #657422;">song =</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="st" style="color: #20794D;">"Rake it Up"</span>, <span class="st" style="color: #20794D;">"Bang Bang"</span>, <span class="st" style="color: #20794D;">"Side to Side"</span>),</span>
+<span id="cb6-3">  <span class="at" style="color: #657422;">artist =</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="st" style="color: #20794D;">"Yo Gotti, Nicki Minaj"</span>, <span class="st" style="color: #20794D;">"Jessie J, Ariana Grande, Nicki Minaj"</span>, <span class="st" style="color: #20794D;">"Ariana Grande, Nicki Minaj"</span>)</span>
+<span id="cb6-4">)</span>
+<span id="cb6-5"></span>
+<span id="cb6-6">stringy_df</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 2
+  song         artist                              
+  &lt;chr&gt;        &lt;chr&gt;                               
+1 Rake it Up   Yo Gotti, Nicki Minaj               
+2 Bang Bang    Jessie J, Ariana Grande, Nicki Minaj
+3 Side to Side Ariana Grande, Nicki Minaj          </code></pre>
+</div>
+</div>
+<p>We can use <code>separate_longer_delim()</code> along with the <code>delim</code> argument to get the same result for this data frame that we did for the nested one.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1">stringy_df <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb8-2">  <span class="fu" style="color: #4758AB;">separate_longer_delim</span>(artist, <span class="at" style="color: #657422;">delim =</span> <span class="st" style="color: #20794D;">", "</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 7 × 2
+  song         artist       
+  &lt;chr&gt;        &lt;chr&gt;        
+1 Rake it Up   Yo Gotti     
+2 Rake it Up   Nicki Minaj  
+3 Bang Bang    Jessie J     
+4 Bang Bang    Ariana Grande
+5 Bang Bang    Nicki Minaj  
+6 Side to Side Ariana Grande
+7 Side to Side Nicki Minaj  </code></pre>
+</div>
+</div>
+</section>
+<section id="different-inputs-same-output" class="level2">
+<h2 class="anchored" data-anchor-id="different-inputs-same-output">Different inputs, same output</h2>
+<p>The diagram below illustrates how the two different data frames each produced the same result by using the relevant functions.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://mara.quarto.pub/tidy-advent-2022/posts/song_artist_longer_transform_unnest_longer-min.png" class="img-fluid figure-img" alt="The nested data frame, with a song column, and a list column with artists is transformed into a data frame with one artist and song per column by using the unnest_longer() function."></p>
+<p></p><figcaption class="figure-caption">Nested data frame transformed to tidy output using <code>unnest_longer()</code>.</figcaption><p></p>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://mara.quarto.pub/tidy-advent-2022/posts/song_artist_longer_transform_separate_longer-min.png" class="img-fluid figure-img" alt="A data frame with two columns, song and artist that contains multiple artists in the artist column as a string separated by rows is transformed into a tidy data frame using separate_longer_delim()."></p>
+<p></p><figcaption class="figure-caption">Data frame with comma-delimited strings in artist column transformed to tidy output with <code>separate_longer_delim()</code>.</figcaption><p></p>
+</figure>
+</div>
+
+
+
+</section>
+
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-tidyr" class="csl-entry">
+Wickham, Hadley, and Maximilian Girlich. 2022. <em>Tidyr: Tidy Messy Data</em>.
+</div>
+</div></section><section id="footnotes" class="footnotes footnotes-end-of-document"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p>This makes sense, given that wild-caught data from JSON and XML are often deeply nested.↩︎</p></li>
+<li id="fn2"><p>Note that you’ll need to install the development version of tidyr in order to use these functions.↩︎</p></li>
+</ol>
+</section></div> ]]></description>
+  <guid>https://mara.quarto.pub/tidy-advent-2022/posts/01-separate-longer.html</guid>
+  <pubDate>Thu, 01 Dec 2022 07:00:00 GMT</pubDate>
+  <media:content url="https://mara.quarto.pub/tidy-advent-2022/posts/song_artist_longer_transform_unnest_longer_separate_longer-min.png" medium="image" type="image/png" height="80" width="144"/>
+</item>
+</channel>
+</rss>
