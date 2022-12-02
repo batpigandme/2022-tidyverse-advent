@@ -72,9 +72,9 @@ stringy_df %>%
 
 The diagram below illustrates how the two different data frames each produced the same result by using the relevant functions.
 
-![Nested data frame transformed to tidy output using `unnest_longer()`.](song_artist_longer_transform_unnest_longer-min.png){fig-alt="The nested data frame, with a song column, and a list column with artists is transformed into a data frame with one artist and song per column by using the unnest_longer() function."}
+![Nested data frame transformed to tidy output using `unnest_longer()`.](song_artist_longer_transform_unnest_longer-min.png){#fig-unnest-longer fig-alt="The nested data frame, with a song column, and a list column with artists is transformed into a data frame with one artist and song per column by using the unnest_longer() function."}
 
-![Data frame with comma-delimited strings in artist column transformed to tidy output with `separate_longer_delim()`.](song_artist_longer_transform_separate_longer-min.png){fig-alt="A data frame with two columns, song and artist that contains multiple artists in the artist column as a string separated by rows is transformed into a tidy data frame using separate_longer_delim()."}
+![Data frame with comma-delimited strings in artist column transformed to tidy output with `separate_longer_delim()`.](song_artist_longer_transform_separate_longer-min.png){#fig-separate-longer fig-alt="A data frame with two columns, song and artist that contains multiple artists in the artist column as a string separated by rows is transformed into a tidy data frame using separate_longer_delim()."}
 
 [^1]: This makes sense, given that wild-caught data from JSON and XML are often deeply nested.
 
