@@ -25,6 +25,7 @@ format:
     code-copy: true
     code-overflow: wrap
 
-freeze: true
+execute: 
+  freeze: auto
       
 
