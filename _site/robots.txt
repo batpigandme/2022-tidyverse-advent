@@ -1,1 +1,0 @@
-Sitemap: https://mara.quarto.pub/tidy-advent-2022/sitemap.xml
