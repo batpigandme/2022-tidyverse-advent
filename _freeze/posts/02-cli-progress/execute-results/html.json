@@ -1,0 +1,14 @@
+{
+  "hash": "444fb00c3e3f5db52813d61b0c0525be",
+  "result": {
+    "markdown": "---\ntitle: \"Day 2: `cli_progress_*()`\"\ndate: \"2022-12-02\"\ndescription:  |\n  Show progress in your code using the `cli_progress_*()` family of functions from the cli package.\ntags: \n  - cli\n  - progress bars\nformat: html\nknitr: \n  opts_chunk: \n    collapse: true\nbibliography: references.bib\n---\n\n::: {.cell}\n\n:::\n\n\n\n\n\n\nThe [cli package](https://cli.r-lib.org/) [@cli] provides helpers for developing attractive command line interfaces and output. It has lots of great features worth checking out, but today we're going to talk about one of my favorites: progress bars!\n\n::: callout-tip\n## Tip\n\nThis post is just a quick highlight reel, check out cli's progress-bar vignettes for more details:\n\n-   [Introduction to progress bars in cli](https://cli.r-lib.org/articles/progress.html)\n\n-   [Advanced cli progress bars](https://cli.r-lib.org/articles/progress-advanced.html)\n:::\n\n## Progress bar basics\n\nTo lift straight from the progress-bar intro vignette,\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}
