@@ -16,9 +16,9 @@ Today you'll see how the new [`separate_longer_*()`](https://tidyr.tidyverse.org
 
 We're going to look at the same data in two different formats: one where strings have been nested in a list column, and the other where there are multiple strings in a character column.
 
-{@fig-combo} gives a quick visual summary of what we'll do in the code that follows.
+Here's a quick visual summary, below, of what we'll do in the code that follows.
 
-
+![A nested data frame with a list column is transformed to tidy output using `unnest_longer()`, a data frame with the same data as a comma-separated character column is transformed to tidy output using `separate_longer_delim()`.](song_artist_longer_transform_unnest_longer_separate_longer-min.png){.column-page #fig-combo fig-alt="A nested data frame (left), with a song character column, and a an artist list column is transformed into a data frame with one artist and song per row by using the unnest_longer() function. A data frame (right) with two character columns, song and artist, that contains multiple artists in the artist column as a string separated by commas is transformed into a tidy data frame with one song per row and one artist per row using separate_longer_delim()."}
 
 ## The nested version
 
@@ -72,13 +72,15 @@ stringy_df %>%
   separate_longer_delim(artist, delim = ", ")
 ```
 
+To separate by a fixed width rather than a delimiter, you can use [`separate_longer_position()`](https://tidyr.tidyverse.org/dev/reference/separate_longer_delim.html).
+
 ## Different inputs, same output
 
 The diagram below illustrates how the two different data frames each produced the same result by using the relevant functions.
 
 ![Nested data frame transformed to tidy output using `unnest_longer()`.](song_artist_longer_transform_unnest_longer-min.png){#fig-unnest-longer fig-alt="The nested data frame, with a song column, and a list column with artists is transformed into a data frame with one artist and song per row by using the unnest_longer() function."}
 
-![Data frame with comma-delimited strings in artist column transformed to tidy output with `separate_longer_delim()`.](song_artist_longer_transform_separate_longer-min.png){#fig-separate-longer fig-alt="A data frame with two character columns, song and artist, that contains multiple artists in the artist column as a string separated by commas is transformed into a tidy data frame with one song per row and one artist per row using separate_longer_delim()."}
+![Data frame with comma-delimited strings in artist column transformed to tidy output using `separate_longer_delim()`.](song_artist_longer_transform_separate_longer-min.png){#fig-separate-longer fig-alt="A data frame with two character columns, song and artist, that contains multiple artists in the artist column as a string separated by commas is transformed into a tidy data frame with one song per row and one artist per row using separate_longer_delim()."}
 
 [^1]: This makes sense, given that wild-caught data from JSON and XML are often deeply nested.
 
