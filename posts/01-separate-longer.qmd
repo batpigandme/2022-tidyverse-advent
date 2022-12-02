@@ -50,7 +50,7 @@ nested_df %>%
   unnest_longer(artist)
 ```
 
-## The multiple-strings in a row version
+## The comma-separated-string version
 
 Now let's look at the same data in a different shape of sorts---one in which the artists are stored as a single character string separated by commas.
 
