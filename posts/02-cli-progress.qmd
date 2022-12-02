@@ -6,6 +6,8 @@ description:  |
 tags: 
   - cli
   - progress bars
+image: cli-cleaning-data-indicator-image-min.png
+image-alt: "Two progress bars, the first of which says Cleaning data #1 with a green bar and indicator of 100%, the second says Cleaning data #2 has a partially filled green progress bar and reads 28% followed by an ETA of 2s."
 format: 
   html:
     code-line-numbers: true
@@ -95,3 +97,59 @@ clean()
 ```
 
 ![](cli-classic-example.svg){fig-alt="Progress bar that says \"cleaning data\" with a series of boxes that update along with a percentage and an ETA until done."}
+
+## Unknown total
+
+*But what if I don't know how many units total?* Don't worry, there's still a way to show your progress with an [unknown total number of units](https://cli.r-lib.org/articles/progress.html#unknown-total-number-of-units). You can omit the total number from the `cli_progress_bar()` function, and use `force = TRUE` inside of `cli_progress_update()`, as seen on line 8 of the code below.
+
+```{r}
+#| label: unknown-units
+#| echo: true
+#| eval: false
+walk_dirs <- function() {
+  cli_progress_bar("Walking directories")
+  while (TRUE) {
+    if (runif(1) < 0.01) break
+    Sys.sleep(0.01)
+    cli_progress_update()
+  }
+  cli_progress_update(force = TRUE)
+}
+walk_dirs()
+```
+
+Naturally, the output will look different, since you don't have a known total on which to base your progress percentage.
+
+![](cli-unknown-total-example.svg){fig-alt="Command line interface with animated wheel that reads \"Walking directories\" followed by the number done, the number per second, and time elapsed."}
+
+## Progress without bars
+
+Want to know how your code is going but don't want or need a progress bar along the way? Check out the [`cli_progress_message()`](https://cli.r-lib.org/reference/cli_progress_message.html) and [`cli_progress_step()`](https://cli.r-lib.org/reference/cli_progress_step.html) functions.
+
+`cli_progress_step()` makes use of cli feaatures, such as [`cli_alert()`](https://cli.r-lib.org/reference/cli_alert.html) themes to show colored icons indicating information, success, and danger, and will show you the duration of each step after it's completed.
+
+```{r}
+#| label: cli-progress-step
+#| eval: false
+#| echo: true
+f <- function() {
+  cli_progress_step("Downloading data")
+  Sys.sleep(2)
+
+  cli_progress_step("Importing data")
+  Sys.sleep(1)
+
+  cli_progress_step("Cleaning data")
+  Sys.sleep(2)
+
+  cli_progress_step("Fitting model")
+  Sys.sleep(3)
+}
+f()
+```
+
+![](cli-progress_step_simple-example.svg){fig-alt="Bullets for Downloading data, Importing data, Cleaning data, and Fitting model each of which is preceded by an icon indicating whether or not it is finished and followed by the duration it took when done."}
+
+## Learn more
+
+This is but a paltry sampling of what you can do with the `cli_progress_*()` functions, so be sure to take the time to check out [cli documentation](https://cli.r-lib.org/)!
