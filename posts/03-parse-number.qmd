@@ -1,0 +1,41 @@
+---
+title: "Day 03: `parse_number()`"
+date: "2022-12-03"
+description:  |
+  readr's parsing functions can come in handy even after you've imported data. `parse_number()` is flexible enough to deal with things like leading characters, trailing white space, and formatting from different locales.
+image: parse_number_thumb-min.png
+image-alt: "The number 1234567.89 shown three times, first using a comma for the grouping mark and a period for the decimal separator, second with a period for the grouping mark and a comma for the decimal separator, and last with a space for a grouping mark and a period for the decimal separator. The grouping marks are highlighted in blue and the decimal mark is highlighted in green."
+---
+
+Numeric data do not always arrive cleanly formatted. In fact, what constitutes "correct" formatting varies depending on location and convention. For example, the [decimal separator](https://en.wikipedia.org/wiki/Decimal_separator) may be representated as a period or a comma according to the [ISO 31-0 standards](https://en.wikipedia.org/wiki/ISO_31-0#Numbers), while the grouping mark (that divides numbers into groups of thousands) is usually a comma in the US but a period in many non-English-speaking countries [@wiki:Decimal_separator].
+
+Similarly, your numeric data may come with leading or trailing non-numeric characters representing units or currency (e.g. $1,000 or 1,000USD). Depending on the situation, you might need this information, which is why the [`parse_guess()`](https://readr.tidyverse.org/reference/parse_guess.html) function in readr [@readr] interprets these as character strings.
+
+[`parse_number()`](https://readr.tidyverse.org/reference/parse_number.html) is your flexible-number-parsing friend for when you **know** you just want the number part of the data. It drops non-numeric characters before the number, and _all_ characters after the first number.
+
+```{r}
+#| label: libs
+library(readr)
+```
+
+```{r}
+#| label: elim-characters
+parse_number("$1,000")
+parse_number("1000USD")
+parse_number("t1000t1000") # you only get the first number here
+```
+
+You can use pass readr's [`locale()`](https://readr.tidyverse.org/reference/locale.html) function to the `locale` argument to specify decimal and grouping marks.[^1]
+
+```{r}
+#| label: grouping-marks
+format(
+c(
+  parse_number("1,234,567.89"), # `locale()` uses US English default
+  parse_number("1 234 567.89", locale = locale(decimal_mark = ".", grouping_mark = " ")),
+  parse_number("1.234.567,89", locale = locale(decimal_mark = ",", grouping_mark = "."))
+),
+nsmall = 2)
+```
+
+[^1]: Note that I've used `format()` so that the two decimal places will be printed for these values.
