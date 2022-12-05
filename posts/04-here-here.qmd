@@ -1,0 +1,30 @@
+---
+title: "Day 04: `here::here()`"
+date: "2022-12-04"
+description: "Begin your journey to project-oriented-workflow enlightenment by using `here::here()` to build file paths."
+image: allison_horst_here_illustration-min.png
+image-alt: "A cartoon showing two paths side-by-side. On the left is a scary spooky forest, with spiderwebs and gnarled trees, with file paths written on the branches like ~/mmm/nope.csv and setwd(/haha/good/luck/), with a scared looking cute fuzzy monster running out of it. On the right is a bright, colorful path with flowers, rainbow and sunshine, with signs saying here! and it's all right here! A monster facing away from us in a backpack and walking stick is looking toward the right path. Stylized text reads here: find your path."
+tags: 
+  - here
+fig-cap-location: bottom
+---
+
+The titular function of the [here](https://here.r-lib.org/) package [@here], [`here::here()`](https://here.r-lib.org/reference/here.html), hasn't exactly been slept on. Among other things, it's garnered an excellent illustration by [Allison Horst](https://allisonhorst.com/allison-horst) (below), and an [ode by Jenny Bryan](https://github.com/jennybc/here_here "Ode to the here package").
+
+![[Artwork by \@allison_horst](https://twitter.com/allison_horst)](allison_horst_here_illustration-min.png){fig-alt="A cartoon showing two paths side-by-side. On the left is a scary spooky forest, with spiderwebs and gnarled trees, with file paths written on the branches like\"~/mmm/nope.csv\" and \"setwd(\"/haha/good/luck/\")\", with a scared looking cute fuzzy monster running out of it. On the right is a bright, colorful path with flowers, rainbow and sunshine, with signs saying \"here!\" and \"it's all right here!\" A monster facing away from us in a backpack and walking stick is looking toward the right path. Stylized text reads \"here: find your path.\""}
+
+***Why all the fuss?***
+
+`here()` is one of the keys to a collaborative, [project-oriented workflow](https://www.tidyverse.org/blog/2017/12/workflow-vs-script/). Rather than using `setwd()` (which usually involves an absolute path to a location on a single user's machine), you can use `here()` to build file paths that are relative to the project root.
+
+For example, when reading in data for a project, my script usually looks something like the following:
+
+```{r}
+#| label: dummy-read-in
+#| eval: false
+read_csv(here::here("data", "my_data.csv"))
+```
+
+Since I do almost all of my work in projects with `.Rproj` files, this means that the data I'm reading is in a subfolder of my project called "data", and the file is "my_data.csv".
+
+If you're not an `.Rproj` user, `here()` has a hierarchy of heuristics it uses to determine the [project root](https://here.r-lib.org/reference/here.html#project-root), including checking for the presence of a file named `.here`. For more detail, Jenny Bryan's ode contains an excellent [section on the fine print](https://github.com/jennybc/here_here#the-fine-print).
