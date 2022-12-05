@@ -7,6 +7,3 @@ freeze: true
 
 # Disable banner style title blocks
 title-block-banner: false
-
-# Put fig captions on top
-fig-cap-location: top

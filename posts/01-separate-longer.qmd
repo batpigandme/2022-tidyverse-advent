@@ -8,6 +8,7 @@ tags:
   - functions
 image: "song_artist_longer_transform_unnest_longer_separate_longer-min.png"
 image-alt: "A nested data frame (left), with a song character column, and a an artist list column is transformed into a data frame with one artist and song per row by using the unnest_longer() function. A data frame (right) with two character columns, song and artist, that contains multiple artists in the artist column as a string separated by commas is transformed into a tidy data frame with one song per row and one artist per row using separate_longer_delim()."
+fig-cap-location: top
 ---
 
 Depending on how you get your data, the "tidying" process can take different forms. Much of the focus in the tidyr [@tidyr] documentation (e.g. in the [Rectangling vignette](https://tidyr.tidyverse.org/articles/rectangle.html)) focuses on dealing with *nested* data[^1].
