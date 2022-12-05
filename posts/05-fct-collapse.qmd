@@ -1,0 +1,55 @@
+---
+title: "Day 05: `fct_collapse()`"
+date: "2022-12-05"
+description:  |
+  Easily combine multiple factor levels with `forcats::fct_collapse()`.
+image: fct_collapse_thumb-min.png
+image-alt: "fct_collapse() written in bold black letters over a background of pink with light white dots."
+tags: 
+  - forcats
+---
+
+The [forcats](https://forcats.tidyverse.org/) package [@forcats] provides several functions for [changing the value of factor levels](https://forcats.tidyverse.org/reference/index.html#change-value-of-levels)---the most generic being [`fct_recode()`](https://forcats.tidyverse.org/reference/fct_recode.html), which lets you change factor levels by hand.
+
+[**`fct_collapse()`**](https://forcats.tidyverse.org/reference/fct_collapse.html) is a variant of `fct_recode()` that lets you combine (or _collapse_) a vector of old levels into a new level (rather than specifying the new level for each individual old level, as you'd have to do with `fct_recode()`).
+
+It's a function I use when I want to effectively lower the resolution of my data&mdash;i.e. the original levels are more specific than I need for the purposes of my analysis.[^1]
+
+In this simple example, we'll combine political affiliations (`partyid`) from the General Social Survey dataset ([`gss_cat`](https://forcats.tidyverse.org/reference/gss_cat.html)) included in forcats.
+
+```{r}
+#| label: libs
+#| message: false
+library(tidyverse)
+library(forcats)
+```
+
+Let's look at the levels we have to begin with:
+
+```{r}
+#| label: orig-levels
+levels(gss_cat$partyid)
+```
+
+Perhaps I just want to know if they're a Republican, Democrat, Independent, or something else--a perfect use case for `fct_collapse()`.
+
+```{r}
+#| label: collapse
+gss_cat |>
+  mutate(
+    party_generic = fct_collapse(partyid,
+      "Other" = c("No answer", "Don't know", "Other party"),
+      "Republican" = c("Strong republican", "Not str republican"),
+      "Independent" = c("Independent", "Ind,near dem", "Ind,near rep"),
+      "Democrat" = c("Strong democrat", "Not str democrat")
+    )
+  ) |> 
+  count(party_generic)
+```
+
+
+## Learn more
+
+For more information, see the [`fct_collapse()`](https://forcats.tidyverse.org/reference/fct_collapse.html) function reference, as well as the section on [modifying factor levels](https://r4ds.hadley.nz/factors.html#modifying-factor-levels) in [R for Data Science](https://r4ds.hadley.nz/).
+
+[^1]: For this same reason, I often save my collapsed factor as a new variable so that the finer details are preserved.
