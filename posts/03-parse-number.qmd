@@ -5,6 +5,8 @@ description:  |
   readr's parsing functions can come in handy even after you've imported data. `parse_number()` is flexible enough to deal with things like leading characters, trailing white space, and formatting from different locales.
 image: parse_number_thumb-min.png
 image-alt: "The number 1234567.89 shown three times, first using a comma for the grouping mark and a period for the decimal separator, second with a period for the grouping mark and a comma for the decimal separator, and last with a space for a grouping mark and a period for the decimal separator. The grouping marks are highlighted in blue and the decimal mark is highlighted in green."
+tags: 
+  - readr
 ---
 
 Numeric data do not always arrive cleanly formatted. In fact, what constitutes "correct" formatting varies depending on location and convention. For example, the [decimal separator](https://en.wikipedia.org/wiki/Decimal_separator) may be representated as a period or a comma according to the [ISO 31-0 standards](https://en.wikipedia.org/wiki/ISO_31-0#Numbers), while the grouping mark (that divides numbers into groups of thousands) is usually a comma in the US but a period in many non-English-speaking countries [@wiki:Decimal_separator].
@@ -38,4 +40,4 @@ c(
 nsmall = 2)
 ```
 
-[^1]: Note that I've used `format()` so that the two decimal places will be printed for these values.
+[^1]: Note that I've used `format()` so that the two decimal places will be printed for these values. It does not affect the parsing of the values.
