@@ -1,0 +1,59 @@
+---
+title: "Day 06: `glimpse()`"
+date: "2022-12-06"
+description: "An easy way to take a quick peek at all of the columns in your data frame (and as much data as fits on a row), `glimpse()` is like a transposed version of `print()` that lets you see your columns as rows."
+image: glimpse-thumb-min.png
+image-alt: "glimpse() in bold letters in the foreground overlaying a background that faintly shows the output of glimpse for a data frame."
+tags: 
+  - dplyr
+  - pillar
+knitr: 
+      opts_chunk: 
+        collapse: true
+        comment: "#>"
+---
+
+A function so nice we've exported ([and documented](https://github.com/tidyverse/dplyr/issues/6008)) it twice, [`glimpse()`](https://pillar.r-lib.org/reference/glimpse.html) is provided by the pillar package [@pillar], but is re-exported by dplyr [@dplyr] for your convenience. Heck, we even named [a newsletter](https://posit.co/blog/rstudio-glimpse-newsletter-01/) after it!
+
+What exactly does glimpse do? Well, according to the function reference:
+
+> `glimpse()` is like a transposed version of [`print()`](https://rdrr.io/r/base/print.html): columns run down the page, and data runs across. This makes it possible to see every column in a data frame. It's a little like [`str()`](https://rdrr.io/r/utils/str.html) applied to a data frame but it tries to show you as much data as possible. (And it always shows the underlying data, even when applied to a remote data source.)
+
+This is a case where it's easier to show than tell. Let's take a look at some real data, we'll use today's [2022-2023 NBA Player Stats: Totals](https://www.basketball-reference.com/leagues/NBA_2023_totals.html) acquired through [Basketball Reference](https://www.basketball-reference.com/).
+
+```{r}
+#| label: libs-and-read
+#| message: false
+library(tidyverse)
+bref_data <- read_csv(here::here("data", "bref-data.csv"))
+```
+
+Our data is in a tibble, so the default [print formatting](https://tibble.tidyverse.org/reference/formatting.html) is pretty good. It shows us as many columns as can fit on the screen as determined by the `width` option with their types and first ten rows, followed by a summary of the remaining rows and columns.
+
+::: column-body-outset
+```{r}
+#| label: tibble-print
+bref_data
+```
+:::
+
+However, because this tibble is quite wide, there's a lot of information being relegated to that dense summary at the bottom. **`glimpse()`** is the perfect way to get a bit more detail about what's in there before doing my analysis.
+
+Below, I'll put the data directly into the function, but you can also use the pipe if you prefer.
+
+::: column-body-outset
+```{r}
+#| label: glimpse-data
+glimpse(bref_data)
+```
+:::
+
+Behold! My columns are all lined up (as rows), with their types and previews of the data therein. It's not a detailed summary[^1], but it's a nice ***glimpse*** of what your data hold.
+
+::: callout-note
+## Note
+
+If you'd *really* like the nitty-gritty details behind `glimpse()`'s formatting, pillar's [`format_glimpse()`](https://pillar.r-lib.org/reference/format_glimpse.html) provides the logic for its printing of vectors.
+:::
+
+[^1]: For that, I'm a fan of the [skimr](https://docs.ropensci.org/skimr/) package [@skimr].
