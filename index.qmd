@@ -3,7 +3,7 @@ title: "A very tidy advent 2022"
 description: "25 days of tidyverse and r-lib functions, tips, and tricks."
 listing:
   contents: posts
-  sort: "date asc"
+  sort: "date desc"
   type: grid
   fields: [image, title, subtitle, reading-time, categories, description, date]
   categories: false

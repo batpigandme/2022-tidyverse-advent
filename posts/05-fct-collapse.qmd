@@ -3,8 +3,8 @@ title: "Day 05: `fct_collapse()`"
 date: "2022-12-05"
 description:  |
   Easily combine multiple factor levels with `forcats::fct_collapse()`.
-image: fct_collapse_thumb-min.png
-image-alt: "fct_collapse() written in bold black letters over a background of pink with light white dots."
+image: fct-collapse-color-swatches-min.png
+image-alt: "Three rows of color swatches (green, blue, and red) each of which shows a single square of a color on the left of an equation followed by = and c() surrounding four swatches of different shades of the color on the LHS of the equation."
 tags: 
   - forcats
 ---
