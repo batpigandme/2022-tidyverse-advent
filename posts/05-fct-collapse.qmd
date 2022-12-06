@@ -50,6 +50,6 @@ gss_cat |>
 
 ## Learn more
 
-For more information, see the [`fct_collapse()`](https://forcats.tidyverse.org/reference/fct_collapse.html) function reference, as well as the section on [modifying factor levels](https://r4ds.hadley.nz/factors.html#modifying-factor-levels) in [R for Data Science](https://r4ds.hadley.nz/).
+For more information, see the [`fct_collapse()`](https://forcats.tidyverse.org/reference/fct_collapse.html) function reference, as well as the section on [modifying factor levels](https://r4ds.hadley.nz/factors.html#modifying-factor-levels) in [R for Data Science](https://r4ds.hadley.nz/) [@r4ds2e].
 
 [^1]: For this same reason, I often save my collapsed factor as a new variable so that the finer details are preserved.
