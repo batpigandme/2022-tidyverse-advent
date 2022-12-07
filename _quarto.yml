@@ -11,8 +11,8 @@ website:
         href: index.xml
         aria-label: RSS feed
       - icon: github
-        href: https://github.com/tidyverse
-        aria-label: Tidyverse GitHub page
+        href: https://github.com/batpigandme/2022-tidyverse-advent
+        aria-label: GitHub repo with code for this page
   open-graph:
     locale: en_US
 format:
