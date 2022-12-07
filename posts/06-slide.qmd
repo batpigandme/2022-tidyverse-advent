@@ -5,6 +5,8 @@ description:  |
   Do window-based computations, like rolling averages and cumulative sums, by "sliding" across your data with `slider::slide()` and friends.
 image: slide-function-thumb-min.png
 image-alt: "Expression that reads slide(, fn, .before = 1) where the first argument is a stack of four colored blocks. This is followed by an arrow indicating that this computes fn() around: the first block, the first and second, second and third, and third and fourth."
+tags: 
+  - slider
 ---
 
 The [slider](https://slider.r-lib.org/index.html) package provides "sliding window" functions that let you iterate over windows of your data to compute things like rolling averages and cumulative sums [@slider].
