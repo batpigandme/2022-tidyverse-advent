@@ -1,0 +1,49 @@
+---
+title: "Day 07: `slider::slide()`"
+date: "2022-12-07"
+description:  |
+  Do window-based computations, like rolling averages and cumulative sums, by "sliding" across your data with `slider::slide()` and friends.
+image: slide-function-thumb-min.png
+image-alt: "Expression that reads slide(, fn, .before = 1) where the first argument is a stack of four colored blocks. This is followed by an arrow indicating that this computes fn() around: the first block, the first and second, second and third, and third and fourth."
+---
+
+The [slider](https://slider.r-lib.org/index.html) package provides "sliding window" functions that let you iterate over windows of your data to compute things like rolling averages and cumulative sums [@slider].
+
+[`slide()`](https://slider.r-lib.org/reference/slide.html) is similar to [`purrr::map()`](https://purrr.tidyverse.org/reference/map.html), but instead of applying a function, `.f`, to each *element* of its input, `.x`, it applies the function to each *window* of `.x`, returning a list of the same length as the input.[^1]
+
+The windows are most easily defined using the `.before` and/or `.after` arguments, which can also be set to `Inf` should you want your window to be ever expanding.
+
+Let's take a look a a simple example, calculating the mean for each element of a vector with a window that includes one value before.
+
+```{r}
+#| label: lib-mean
+library(slider)
+our_vec <- c(2:5)
+slide(our_vec, mean, .before = 1)
+```
+
+Note that the value returned for our first element, above, is the same as that element (2). This is because it has no values before it, and `slide()`'s default behavior is to compute on incomplete windows. You can use the `complete` argument to tell `slide()` to only compute on complete windows.
+
+```{r}
+#| label: complete
+slide(our_vec, mean, .before = 1, .complete = TRUE)
+```
+
+As mentioned, you can set `.before` to `Inf` to do an ***expanding*** window computation (meaning that it includes everything that came before it).
+
+```{r}
+#| label: expanding
+slide(our_vec, mean, .before = Inf)
+```
+
+## Learn more
+
+In addition to `slide()`, slider has two other core functions, [`slide_index()`](https://slider.r-lib.org/reference/slide_index.html) (which allows you to do a rolling computation relative to an index), and [`slide_period()`](https://slider.r-lib.org/reference/slide_period.html) (which lets you break up an index into chunks by periods, such as months). You can learn more about all three of these functions in the introductory vignette, [**Getting started with slider**](https://slider.r-lib.org/articles/slider.html).
+
+Want to fit this into a row-oriented workflow? See [**Row-wise iteration with slider**](https://slider.r-lib.org/articles/rowwise.html).
+
+Wondering how `slide()` fits in with the [tsibble](https://tsibble.tidyverts.org/) package [@tsibble] from whence it came? Then [**Converting from tsibble**](https://slider.r-lib.org/articles/tsibble.html) is the vignette for you.
+
+Davis Vaughan (the author of slider) also gave a 5-minute lightning talk, [**Sliding Windows and Calendars**](https://www.rstudio.com/resources/rstudioconf-2020/sliding-windows-and-calendars-davis-vaughan/), at rstudio::conf(2020) on using slider with the [almanac](https://davisvaughan.github.io/almanac/) package---particularly handy if you've got a time series with missing data.
+
+[^1]: Like purrr, `slide_*()` has type-suffixed variants (e.g. `slide_int(),` `slide_chr(),` `slide_dfr()`, etc.).
