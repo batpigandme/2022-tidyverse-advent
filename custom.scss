@@ -3,13 +3,13 @@
 //## Font, line-height, and color for body text, headings, and more.
 $font-size-root: 1.2em;
 // import Lato
-@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400;1,700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400;1,700&display=swap");
 $font-family-sans-serif: Lato, sans-serif !default;
 // import Roboto Mono
 @import url("https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap");
 $font-family-monospace: "Roboto Mono", SFMono-Regular, Menlo, Monaco, Consolas,
   monospace !default;
-  
+
 // manually set primary
 $primary: #812929 !default;
 
@@ -98,7 +98,7 @@ p a code:not(.sourceCode) {
 
 // deal with getting the category tags to be darker
 .quarto-title .quarto-categories .quarto-category a {
-    color: black;
+  color: black;
 }
 
 // figcaption color and font size
@@ -107,4 +107,9 @@ p a code:not(.sourceCode) {
 figcaption {
   color: $gray-700;
   font-size: 0.925rem;
+}
+
+// inline citation font size
+.citation a {
+  font-size: 0.925em;
 }
