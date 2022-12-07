@@ -1,5 +1,5 @@
 ---
-title: "Day 2: `cli_progress_*()`"
+title: "Day 02: `cli_progress_*()`"
 date: "2022-12-02"
 description:  |
   Show progress in your code using the `cli_progress_*()` family of functions from the cli package.

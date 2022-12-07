@@ -1,5 +1,5 @@
 ---
-title: "Day 1: `separate_longer_*()`"
+title: "Day 01: `separate_longer_*()`"
 date: "2022-12-01"
 description:  |
   Learn about tidyr's `separate_longer_*()` functions which separate strings into multiple rows.
