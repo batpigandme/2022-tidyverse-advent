@@ -2,7 +2,7 @@
 title: "Day 04: `here::here()`"
 date: "2022-12-04"
 description: "Begin your journey to project-oriented-workflow enlightenment by using `here::here()` to build file paths."
-image: allison_horst_here_illustration-min.png
+image: allison-horst-here-thumb-min.png
 image-alt: "A cartoon showing two paths side-by-side. On the left is a scary spooky forest, with spiderwebs and gnarled trees, with file paths written on the branches like ~/mmm/nope.csv and setwd(/haha/good/luck/), with a scared looking cute fuzzy monster running out of it. On the right is a bright, colorful path with flowers, rainbow and sunshine, with signs saying here! and it's all right here! A monster facing away from us in a backpack and walking stick is looking toward the right path. Stylized text reads here: find your path."
 tags: 
   - here
