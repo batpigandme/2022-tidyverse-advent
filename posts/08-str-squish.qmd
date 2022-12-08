@@ -1,0 +1,41 @@
+---
+title: "Day 08: `str_squish()`"
+date: "2022-12-08"
+description:  |
+  Remove trailing, leading, and excess white space in the middle with stringr's `str_squish()`.
+image: str-squish-thumb-min.png
+image-alt: "str_squish() is wrapped around a string with dots indicating trailing and leading white space and several internal spaces between words, an arrow shows that the output will have no leading or trailing white space and the internal spaces will be reduced to single spaces between words."
+tags: 
+  - stringr
+---
+
+As mentioned in the overview to the [stringr](https://stringr.tidyverse.org/) package [@stringr], strings might not be the most glamorous part of using R, but they sure do play a big role when it comes to data cleaning.
+
+This will be a quick hit, because [`str_squish()`](https://stringr.tidyverse.org/reference/str_trim.html) is quite simple (but also incredibly helpful, especially with wild-caught data). It does three things (the first two of which can also be done with its close cousin, `str_trim()`):
+
+1.  Removes white space at the start of the string,
+2.  Removes white space at the end of the string, and
+3.  Replaces internal white space with a single space.
+
+Let's look at a couple of examples.
+
+```{r}
+#| label: stringr-lib
+library(stringr)
+str_squish(" this   is my  string   ")
+```
+
+Above, you can see that the leading and trailing space is now gone, and the extra spaces in the middle have been reduced to a single space in each instance.
+
+This also works with other white space characters, such as tabs and new lines.
+
+```{r}
+#| label: special-chars
+str_squish("\n\nthis is   another\t string\t\n")
+```
+
+In addition to removing the leading and trailing white space, the extra spaces and other white space characters in the middle are now single spaces.
+
+## Learn more
+
+We've pretty much covered the extent of `str_squish()` here, but if you want to learn more about string manipulation with stringr in general, check out the [Strings chapter](https://r4ds.hadley.nz/strings.html) in R for Data Science [@r4ds2e].

@@ -1,0 +1,14 @@
+{
+  "hash": "8423d33ffc91cfc2f786f238f9646f72",
+  "result": {
+    "markdown": "---\ntitle: \"Day 08: `str_squish()`\"\ndate: \"2022-12-08\"\ndescription:  |\n  Remove trailing, leading, and excess white space in the middle with stringr's `str_squish()`.\nimage: str-squish-thumb-min.png\nimage-alt: \"str_squish() is wrapped around a string with dots indicating trailing and leading white space and several internal spaces between words, an arrow shows that the output will have no leading or trailing white space and the internal spaces will be reduced to single spaces between words.\"\ntags: \n  - stringr\n---\n\n\nAs mentioned in the overview to the [stringr](https://stringr.tidyverse.org/) package [@stringr], strings might not be the most glamorous part of using R, but they sure do play a big role when it comes to data cleaning.\n\nThis will be a quick hit, because [`str_squish()`](https://stringr.tidyverse.org/reference/str_trim.html) is quite simple (but also incredibly helpful, especially with wild-caught data). It does three things (the first two of which can also be done with its close cousin, `str_trim()`):\n\n1.  Removes white space at the start of the string,\n2.  Removes white space at the end of the string, and\n3.  Replaces internal white space with a single space.\n\nLet's look at a couple of examples.\n\n\n::: {.cell}\n\n```{.r .cell-code}\nlibrary(stringr)\nstr_squish(\" this   is my  string   \")\n```\n\n::: {.cell-output .cell-output-stdout}\n```\n[1] \"this is my string\"\n```\n:::\n:::\n\n\nAbove, you can see that the leading and trailing space is now gone, and the extra spaces in the middle have been reduced to a single space in each instance.\n\nThis also works with other white space characters, such as tabs and new lines.\n\n\n::: {.cell}\n\n```{.r .cell-code}\nstr_squish(\"\\n\\nthis is   another\\t string\\t\\n\")\n```\n\n::: {.cell-output .cell-output-stdout}\n```\n[1] \"this is another string\"\n```\n:::\n:::\n\n\nIn addition to removing the leading and trailing white space, the extra spaces and other white space characters in the middle are now single spaces.\n\n## Learn more\n\nWe've pretty much covered the extent of `str_squish()` here, but if you want to learn more about string manipulation with stringr in general, check out the [Strings chapter](https://r4ds.hadley.nz/strings.html) in R for Data Science [@r4ds2e].\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}
