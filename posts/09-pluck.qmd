@@ -1,0 +1,160 @@
+---
+title: "Day 09: `pluck()`"
+date: "2022-12-09"
+description: |
+  A generalized form of `[[`, `pluck()` lets you safely get an element from deep within a nested data structure (and its friend `chuck()` does the same, but errors if it isn't there).
+image: pluck-thumb-min.png
+image-alt: "purrr::pluck() written on light green background in the style of a marker."
+tags: 
+  - purrr
+reference-location: margin
+---
+
+As described in the [purrr docs](https://purrr.tidyverse.org/reference/pluck.html)[^1]:
+
+> `pluck()` and `chuck()` implement a generalised form of `[[` that allow you to index deeply and flexibly into data structures. `pluck()` consistently returns `NULL` when an element does not exist, `chuck()` always throws an error in that case [@purrr].
+
+Selecting a single element using R's built-in subsetting operators, [`[[`](https://rdrr.io/r/base/Extract.html) and [`$`](https://rdrr.io/r/base/Extract.html), can be a bit tricky, especially with nested data structures.[^2] The inconsistencies in what is returned by `[[` when an element is missing can be particularly painful when working with JSON data from web APIs. When an element is missing `pluck()` always returns `NULL` (or a value set with the `.default` argument), while `chuck()` always throws an error.
+
+Let's look at examples using some data about the Belcher family from [Bob's Burgers](https://en.wikipedia.org/wiki/Bob%27s_Burgers).
+
+```{r}
+#| label: belchers
+#| message: false
+library(tidyverse)
+
+belchers <- list(
+  list(
+    "name" = "Bob",
+    "age" = 46,
+    "father" = "Big Bob",
+    "mother" = "Lily",
+    "children" = list("Tina", "Gene", "Louise"),
+    "glasses" = FALSE
+  ),
+  list(
+    "name" = "Linda",
+    "age" = 45,
+    "father" = "Al",
+    "mother" = "Gloria",
+    "siblings" = list("Gayle"),
+    "children" = list("Tina", "Gene", "Louise"),
+    "glasses" = TRUE
+  ),
+  list(
+    "name" = "Tina",
+    "age" = 13,
+    "father" = "Bob",
+    "mother" = "Linda",
+    "siblings" = list("Gene", "Louise"),
+    "glasses" = TRUE
+  ),
+  list(
+    "name" = "Gene",
+    "age" = 11,
+    "father" = "Bob",
+    "mother" = "Linda",
+    "siblings" = list("Tina", "Louise"),
+    "glasses" = FALSE
+  ),
+  list(
+    "name" = "Louise",
+    "age" = 9,
+    "father" = "Bob",
+    "mother" = "Linda",
+    "siblings" = list("Tina", "Gene"),
+    "glasses" = FALSE
+  )
+)
+```
+
+For those of you not paying close attention, note that (with the exception of Linda, who has siblings *and* children) the items in our list have missing data/non-existent elements. If we used `[[` with numeric positions to access data in our list, we'd end up with information about different things (the fifth element for the first item on our list, Bob, is `children`, while for our fifth item, Louise, it's `siblings`.
+
+```{r}
+#| label: elems-by-pos
+#| collapse: true
+#| comment: "#>"
+belchers[[1]][[5]] # fifth element for first item
+belchers[[5]][[5]] # fifth element for sixth item
+```
+
+This isn't the end of the world--this is why we name things, after all! But, what do we want to happen if we try to get an element by name and it's not there? If the answer is `NULL`, we're in luck. That's what we'll get with a combination of `[[` and `$`.
+
+```{r}
+#| label: by-name
+#| collapse: true
+#| comment: "#>"
+belchers[[1]]$children
+
+belchers[[5]]$children
+```
+
+However, using `[[` by position (say, to get the *seventh* element for an item) will throw an error.
+
+```{r}
+#| label: by-pos
+#| collapse: true
+#| comment: "#>"
+
+# seventh element for second item (Linda) exists
+belchers[[2]][[7]]
+
+# seventh element for first item (Bob) doesn't exist
+try(belchers[[1]][[7]])
+```
+
+`pluck()` and `chuck()` offer us a bit more control in these scenarios. We can use `pluck()` to get `NULL` or a set `.default` value, and `chuck()` if we want this to throw an error. Both verbs accept integer positions, string names, and accessor functions. Unlike `$`, however, partial matches are not accepted.
+
+Getting non-existent `"children"` by name:
+
+```{r}
+#| label: pluck-chuck-missing-name
+#| collapse: true
+#| comment: "#>"
+
+# pluck default is NULL
+pluck(belchers, 5, "children") 
+
+# can set default to return NA
+pluck(belchers, 5, "children", .default = NA)
+
+# use `chuck()` to throw an error for a missing element
+try(chuck(belchers, 5, "children"))
+
+```
+
+The same holds for getting non-existent element by position:
+
+```{r}
+#| label: pluck-chuck-missing-pos
+#| collapse: true
+#| comment: "#>"
+
+pluck(belchers, 5, 7)
+
+pluck(belchers, 5, 7, .default = NA)
+
+try(chuck(belchers, 5, 7))
+```
+
+All of this comes in particularly handy when you're using `pluck()` in combination with purrr's [`map()`](https://purrr.tidyverse.org/reference/map.html) functions. Let's say I want to get the first-born child for each Belcher, and have it return `NA` if it doesn't exist.[^3]
+
+```{r}
+belchers |> 
+  map(pluck, "children", 1L, .default = NA)
+
+```
+
+## Learn more
+
+There's more to `pluck()` than we've covered here. There's assignment variant, `pluck<-()`, which allows you to modify objects within a nested data structure. And a new function, `pluck_exists()` is in the soon-to-be-released development version of purrr, which (as the name suggests) tells you whether or not an element exists. For details on those, see the [`pluck()` dev reference page](https://purrr.tidyverse.org/dev/reference/pluck.html).
+
+The [`hoist()`](https://tidyr.tidyverse.org/reference/hoist.html) function in tidyr uses the same syntax as `pluck()` to take components of list columns and pull them out into their own top-level columns, which you can learn more about in the tidyr [Rectangling vignette](https://tidyr.tidyverse.org/articles/rectangle.html).
+
+For more on how `[[` handles [missing and out-of-bound indices](https://adv-r.hadley.nz/subsetting.html#subsetting-oob) see the linked section from Advanced R.
+
+[^1]: Note that [`pluck()`](https://purrr.tidyverse.org/dev/reference/pluck.html) and [`chuck()`](https://purrr.tidyverse.org/dev/reference/chuck.html) have separate function-reference pages in the [development version of purrr](https://purrr.tidyverse.org/dev/).
+
+[^2]: For details, see the section on [selecting a single element](https://adv-r.hadley.nz/subsetting.html#subset-single) in the Subsetting chapter of [Advanced R](https://adv-r.hadley.nz/) [@advR].
+
+[^3]: `map()` is actually powered by `pluck()` under the hood, so you can accomplish some of these things by supplying indices directly to `map()` as a list.
