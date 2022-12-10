@@ -5,6 +5,9 @@ website:
   title: "A very tidy advent 2022"
   site-url: https://mara.quarto.pub/tidy-advent-2022/
   description: "25 days of tidyverse and r-lib functions, tips, and tricks."
+  twitter-card:
+    creator: "@dataandme"
+    site: "@dataandme"
   navbar:
     right:
       - icon: rss-fill
