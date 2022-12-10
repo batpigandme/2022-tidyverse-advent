@@ -1,0 +1,46 @@
+---
+title: "Day 10: rig"
+date: "2022-12-10"
+description: |
+  Install, remove, and configure R versions on your machine with rig: the R installation manager.
+image: rig-asciicast-thumb.svg
+image-alt: "Terminal window showing the output of rig list (a table of with name, version, and aliases for installed r versions), and rig default (the default version of R on the machine, 4.2-arm64)."
+tags: 
+  - rig
+reference-location: margin
+---
+
+Unlike the other software we've covered here, [rig](https://github.com/r-lib/rig) [@rig052] is not an R package[^1]. Its purpose is much more meta: it allows you to install, remove, and configure R versions on your machine. It works on Mac, Windows, and Linux---see the [Installation section](https://github.com/r-lib/rig#%EF%B8%8F-installation) of its README to get it up and running on your OS---with no system requirements, regardless of platform.
+
+rig has several great [features](https://github.com/r-lib/rig#-features). Among other things, it allows you to:
+
+-   Install multiple R versions;
+
+-   Select the default R version, for the terminal and RStudio; and
+
+-   Run multiple versions *at the same* time using quick links.
+
+Its most basic [usage](https://github.com/r-lib/rig#%EF%B8%8F-usage) is to run `rig add release` from your terminal to add a new R installation. However, it has several other [commands](https://github.com/r-lib/rig#command-list). Below, you can see what happens when I run `rig list` (which lists installed R versions), and `rig default` (which prints or sets the default R version) on my machine.[^2]
+
+```{=html}
+<script id="asciicast-544517" src="https://asciinema.org/a/544517.js" async></script>
+```
+Perhaps my favorite feature of rig, though, is that it helps you create and configure **user-level package libraries**. Why is this so great? I'll lift the answer straight from the [rig FAQs](https://github.com/r-lib/rig#-faq):
+
+> Installing non-base packages into a user package library has several benefits:
+>
+> -   The system library is not writeable for regular users on some systems (Windows and Linux, typically), so we might as well create a properly versioned user library at the default place.
+>
+> -   Some tools need a clean R environment, with base packages only, and do not work well if user packages are installed into the system library. E.g. `R CMD check` is such a tool, and <https://github.com/r-lib/revdepcheck> is another.
+>
+> -   You can delete an R installation (e.g. with `rig rm`) and then and then install it again, without losing your R packages.
+
+The system subcommand for this is the same across platforms: `rig system setup-user-lib`.
+
+## Learn more
+
+I've only touched on a couple of features here, so be sure to check out the [rig README](https://github.com/r-lib/rig) for more details.
+
+[^1]: I've decided it's still in scope, since it lives inside the r-lib org on GitHub.
+
+[^2]: If you can't see anything, it's probably because you have JavaScript disabled. The [asciinema recording is here](https://asciinema.org/a/544517).
