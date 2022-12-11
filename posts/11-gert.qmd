@@ -1,0 +1,54 @@
+---
+title: "Day 11: gert"
+date: "2022-12-11"
+description: |
+  A minimal Git client for R, the beauty of gert lies in the fact that it gets user credentials through your command-line git credentials store.
+image: gert-thumb-min.png
+image-alt: "library(gert) followed by output in slightly lighter shade that reads: Linking to libgit2 v1.4.2, ssh support: YES; Global config: /Users/maraaverick/.gitconfig; Default user: Mara Averick <myemailname@email.com>."
+tags: 
+  - gert
+reference-location: margin
+---
+
+Let me be honest from the jump: if all goes according to plan, many users will never interact with [gert](https://docs.ropensci.org/gert/) [@gert] directly. If you follow the distilled wisdom of Jenny Bryan's [Happy Git and GitHub for the useR](https://happygitwithr.com/) [@happygitwithr] (most specifically, the chapter on [introducing yourself to Git](https://happygitwithr.com/hello-git.html)), you'll interact with Git and GitHub by way of the [usethis](https://usethis.r-lib.org/) package [@usethis], which uses gert under the hood[^1].
+
+## A bit about gert
+
+gert is based on the C library, [libgit2](https://libgit2.org/), which has pre-built versions provided by gert for Mac, Windows, and Linux-x86_64[^2]. Luckily, gert's high-level functions shield the user from libgit2's complexities by using standard R data types for arguments and return values. For example, [`git_config_global_set()`](https://docs.ropensci.org/gert/reference/git_config.html) takes name-value pairs as arguments, and `git_config_global()` returns a data.frame of your global Git options.
+
+```{r}
+#| label: git-config-global-set
+#| eval: false
+git_config_global_set("user.name", "Sterling Archer")
+git_config_global_set("user.email", "archer@phrasing.co")
+```
+
+```{r}
+#| label: git-config-global
+#| eval: false
+git_config_global()
+#>                name               value     level
+#> 1 credential.helper               cache    global
+#> 2         user.name     Sterling Archer    global
+#> 3        user.email  archer@phrasing.co    global
+```
+
+If you've introduced yourself to Git[^3], gert is able to do [**automatic authentication**](https://docs.ropensci.org/gert/#automatic-authentication) using its close companion, the [credentials](https://docs.ropensci.org/credentials/articles/intro.html) package [@credentials].
+
+> The overall goal for auth is that gert should successfully discover credentials whenever that would also be true for command line `git`.
+
+That's right, gert automatically picks up on credentials stored on your OS keychain, and, if it doesn't find anything, it will prompt you to enter your credentials using [askpass](https://github.com/r-lib/askpass#readme) [@askpass].[^4]
+
+## Learn more
+
+In addition to its [README](https://docs.ropensci.org/gert/index.html), gert has a helpful [introductory vignette](https://docs.ropensci.org/gert/articles/gert.html) to help you get started.
+
+If you want to learn more, and like lots of pictures, check out author Jeroen Ooms' slide deck, [gert: A minimal git client for R](https://jeroen.github.io/gert2019/#1).
+
+[^1]: See the usethis vignette [Managing Git(Hub) Credentials](https://usethis.r-lib.org/articles/git-credentials.html) for details.
+
+[^2]: See [the libgit2 dependency](https://docs.ropensci.org/gert/#the-libgit2-dependency) section of gert's README for details.
+
+[^3]: It doesn't matter how you did this, whether directly through command-line `git` or by way of a helper R package (e.g. gert, or usethis).
+
+[^4]: gert, credentials, and askpass are all authored by [Jeroen Ooms](https://github.com/jeroen), and work together pretty darn seamlessly.
