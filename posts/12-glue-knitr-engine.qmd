@@ -1,0 +1,59 @@
+---
+title: "Day 12: glue's knitr engine"
+date: "2022-12-12"
+description: |
+  Use glue's custom knitr language engine to evaluate chunk contents as a glue template.
+image: glue-knitr-engine-thumb-min.png
+image-alt: "Code cell on left that has glue in curly braces next to backticks, body of which reads 1 + 1 = {1 + 1}. An arrow indicates that the output is to its right. The output reads 1 + 1 = 2."
+tags: 
+  - glue
+---
+
+If you're unfamiliar with [**glue**](https://glue.tidyverse.org/index.html) [@glue], let me catch you up to speed:
+
+> Glue offers interpreted string literals that are small, fast, and dependency-free. Glue does this by embedding R expressions in curly braces which are then evaluated and inserted into the argument string.
+
+Basically, it lets you pass variables directly into strings by wrapping them in curly braces (`{}`), making for some very reader-friendly string interpolation.
+
+Today, I want to highlight a feature of glue that's discussed less often: its [**custom knitr language engine**](https://glue.tidyverse.org/articles/engines.html)[^1].
+
+To use the glue engine in an R Markdown or Quarto document, you just need to load the glue library.
+
+```{r}
+#| label: libs
+library(glue)
+library(palmerpenguins) # I'm loading this to use its data later
+```
+
+Once you've done that, you use it by using `glue` as the named engine (as you would for any other language, say `r` or `python` in a code cell), and the contents will be evaluated as a glue template.
+
+```{glue}
+#| echo: fenced
+1 + 1 = {1 + 1}
+```
+
+You can output markdown or HTML directly into your document, by setting the option `results` to `'asis'`.
+
+```{glue}
+#| echo: fenced
+#| results: 'asis'
+`penguins` has **{nrow(penguins)} rows** and _{ncol(penguins)} columns_.
+```
+
+As you can see, the markdown formatting I've used in the chunk above is rendered in the output.
+
+If you want to pass any arguments to your [`glue()`](https://glue.tidyverse.org/reference/glue.html) call, you can include them as chunk options. For example, let's say I want to use something other than curly braces to surround my R expressions. I can set the opening and closing delimiters with the `.open` and `.close` arguments as options.
+
+```{glue}
+#| echo: fenced
+#| .open: "<<"
+#| .close: ">>"
+#| results: 'asis'
+The **median waiting time** between eruptions is <<median(faithful$waiting)>>.
+```
+
+## Learn more
+
+The glue package has a whole vignette on its [custom knitr language engines](https://glue.tidyverse.org/articles/engines.html), including a section on the [**`glue_sql` engine**](https://glue.tidyverse.org/articles/engines.html#glue_sql-engine), which I haven't covered here. For the rest of glue's features, see the [package documentation](https://glue.tidyverse.org/index.html).
+
+[^1]: If you want to learn more about custom knitr language engines in general, there's a [section on them](https://bookdown.org/yihui/rmarkdown-cookbook/custom-engine.html#custom-engine) in the R Markdown Cookbook [@rmdcookbook], but you don't need to know that info to use the glue engines.
