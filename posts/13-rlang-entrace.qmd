@@ -1,0 +1,82 @@
+---
+title: "Day 13: `rlang::entrace`"
+date: "2022-12-13"
+description: "Promote base R errors to rlang errors and get simplified backtraces with `options(error = rlang::entrace)` and `rlang::last_trace()`."
+image: rlang-last-trace-example-min.png
+image-alt: |
+  Below error message (Error in rowMeans(mini_dat): 'x' must be an array of at least two dimensions) rlang::last_trace() is run. The output produced shows <error/rlang_error> in blue at the top, followed by Error (in yellow) with the error message printed. Lastly, there is a Backtrace. It is a tree with a box with numbered elements below it: 1. global fruit_avg(dat, pattern = 'black'), 2. base::rowMeans(mini_dat) at 2022-tidyverse-advent/R/fruit_avg.R:8:2. The file path is an interactive link.
+tags: 
+  - rlang
+reference-location: margin
+---
+
+Much of [rlang](https://rlang.r-lib.org/index.html) [@rlang] is developer facing, including its tools for capturing and displaying error. What I'm about to show you here **is an exception**. Enabling [`rlang::entrace()`](https://rlang.r-lib.org/reference/rlang_backtrace_on_error.html) and using `rlang::last_trace(`) basically give you a simplified backtrace (the thing that displays the call stack) for errors, making it easier for any user to see where they went wrong.
+
+Don't believe me? Jenny Bryan said it in her 2020 talk on debugging, [Object of type 'closure' is not subsettable](https://youtu.be/vgYS-F8opgE?t=1911):
+
+> One of the things \[rlang\] also offers is some new takes at how to present the call stack, and that's the one part of that **area of rlang that might be relevant to just about anyone** [@bryan2020]. (Emphasis added)
+
+By setting `options(error = rlang::entrace)` in, say, your .Rprofile or in a Quarto or R Markdown document you will promote base R errors to rlang errors. This accomplishes two things (the descriptions of which I'll lift straight from the [rlang docs](https://rlang.r-lib.org/reference/rlang_backtrace_on_error.html)):
+
+> 1.  It saves the base error as an rlang object so you can call [`last_error()`](https://rlang.r-lib.org/reference/last_error.html) to print the backtrace or inspect its data.
+>
+> 2.  It prints the backtrace for the current error according to the `rlang_backtrace_on_error` option.
+
+This is a case where it's much easier to show than tell. Let's look at the difference in call stack in the [fruits debugging demo](https://github.com/jennybc/debugging/blob/master/R/fruit_avg_demo_code.R) from Jenny's talk.[^1] Below, I'm sourcing the code and getting an error (just as I normally would in an interactive R session).
+
+```{r}
+#| error: true
+#| collapse: true
+#| comment: "#>"
+dat <- read.csv(here::here("data", "fruit.csv"), strip.white = TRUE)
+source(here::here("R", "fruit_avg.R"))
+
+fruit_avg(dat, pattern = "black")
+```
+
+Because the printing and handling of errors in R Markdown/Quarto is different to how it normally works in R, I'm just going to show you the difference in outputs with `rlang::last_trace()` and `base::traceback()` as they occur when I run them after this error in my console.
+
+I have `entrace` enabled globally, so the output for `base::traceback()` is the following:
+
+``` r
+base::traceback()
+#> 3: stop("'x' must be an array of at least two dimensions")
+#> 2: rowMeans(mini_dat) at fruit_avg.R#8
+#> 1: fruit_avg(dat, pattern = "black")
+```
+
+If I run `rlang::last_trace()`, I get:
+
+``` r
+rlang::last_trace()
+#> <error/rlang_error>
+#> Error:
+#> ! 'x' must be an array of at least two dimensions
+#> ---
+#> Backtrace:
+#>     ▆
+#>  1. └─global fruit_avg(dat, pattern = "black")
+#>  2.   └─base::rowMeans(mini_dat) at 2022-tidyverse-advent/R/fruit_avg.R:8:2
+```
+
+This repeats the error message, and then prints a simplified tree of calls that led to my error. It tells me where my error was, and, in RStudio, this is an interactive link to the line in the appropriate file. The console output also uses colors and symbols from the cli package to highlight the different parts (see the screenshot below).
+
+![Output of `rlang::last_trace()` in RStudio console.](rlang-last-trace-example-min.png){fig-alt="Below error message (Error in rowMeans(mini_dat): 'x' must be an array of at least two dimensions) rlang::last_trace() is run. The output produced shows <error/rlang_error> in blue at the top, followed by Error (in yellow) with the error message printed. Lastly, there is a Backtrace. It is a tree with a box with numbered elements below it: 1. global fruit_avg(dat, pattern = \"black\"), 2. base::rowMeans(mini_dat) at 2022-tidyverse-advent/R/fruit_avg.R:8:2. The file path is an interactive link."}
+
+Personally, I almost always want to use `rlang::last_trace()`. So, in addition to enabling `options(error = rlang::entrace)` in my profile, I also override the native `traceback()` function with `rlang::last_trace()`.
+
+## Learn more
+
+The aforementioned [call stack section](https://youtu.be/vgYS-F8opgE?t=1911) from Jenny Bryan's [debugging talk](https://www.youtube.com/watch?v=vgYS-F8opgE) is a great way to learn about the (often mysterious) call stack, and what exactly you're being shown when you run a traceback (or backtrace---they mean the same thing).
+
+If you are a developer, or just want to learn more about rlang's tools for signalling and displaying errors, there are several **Conditions** vignettes in the rlang documentation:
+
+-   [Including function calls in error messages](https://rlang.r-lib.org/reference/topic-error-call.html),
+
+-   [Including contextual information with error chains](https://rlang.r-lib.org/reference/topic-error-chaining.html),
+
+-   [Formatting messages with cli](https://rlang.r-lib.org/reference/topic-condition-formatting.html), and
+
+-   [Customising condition messages](https://rlang.r-lib.org/reference/topic-condition-customisation.html).
+
+[^1]: I'm not going through the code here, since it's tricky to knit, and also this is about form as opposed to content.
