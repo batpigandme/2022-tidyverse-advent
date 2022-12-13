@@ -10,7 +10,7 @@ tags:
 reference-location: margin
 ---
 
-Much of [rlang](https://rlang.r-lib.org/index.html) [@rlang] is developer facing, including its tools for capturing and displaying error. What I'm about to show you here **is an exception**. Enabling [`rlang::entrace()`](https://rlang.r-lib.org/reference/rlang_backtrace_on_error.html) and using `rlang::last_trace(`) basically give you a simplified backtrace (the thing that displays the call stack) for errors, making it easier for any user to see where they went wrong.
+Much of [rlang](https://rlang.r-lib.org/index.html) [@rlang] is developer facing, including its tools for capturing and displaying error. What I'm about to show you here **is an exception**. Enabling [`rlang::entrace()`](https://rlang.r-lib.org/reference/rlang_backtrace_on_error.html) and using `rlang::last_trace(`) basically gives you a simplified backtrace (the thing that displays the call stack) for errors, making it easier for any user to see where they went wrong.
 
 Don't believe me? Jenny Bryan said it in her 2020 talk on debugging, [Object of type 'closure' is not subsettable](https://youtu.be/vgYS-F8opgE?t=1911):
 
@@ -79,4 +79,4 @@ If you are a developer, or just want to learn more about rlang's tools for signa
 
 -   [Customising condition messages](https://rlang.r-lib.org/reference/topic-condition-customisation.html).
 
-[^1]: I'm not going through the code here, since it's tricky to knit, and also this is about form as opposed to content.
+[^1]: I'm not going through the code here, since it's tricky to knit errors nicely, and also this is about form as opposed to content.
