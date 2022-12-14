@@ -1,0 +1,73 @@
+---
+title: "Day 14: `c_across()`"
+date: "2022-12-14"
+description: |
+  Designed to work with `rowwise()`, `c_across()` uses tidyselect semantics to make it easier to perform row-wise aggregations.
+image: c-across-thumb-min.png
+image-alt: "c_across() written in black against a blue background with slight white stripes."
+tags: 
+  - dplyr
+---
+
+Columns are special in R, which means that operating on data by row takes a bit more thought. The pros and cons of various approaches featuring purrr have been *very* well elucidated by Jenny Bryan in [Row-oriented workflows in R with the tidyverse](https://github.com/jennybc/row-oriented-workflows#readme) (which includes code examples, a slide deck, *and* a webinar recording), and I won't seek to re-create that here.
+
+[**`c_across()`**](https://dplyr.tidyverse.org/reference/c_across.html) came to dplyr [@dplyr] in 2020 (after Jenny's webinar) to make it easier to select variables when doing operations with [`rowwise()`](https://dplyr.tidyverse.org/reference/rowwise.html). Powered by [tidyselect](https://tidyselect.r-lib.org/index.html) [@tidyselect], it uses the same semantics as [`dplyr::select()`](https://dplyr.tidyverse.org/reference/select.html) , allowing you to do things like use `:` to select a range of consecutive variables, and use selection helpers such as `everything()` and `where()`.
+
+First, we'll load our library and create some data to play with.
+
+```{r}
+#| label: libs
+#| message: false
+library(tidyverse)
+
+df <- tibble(
+  id = 1:5,
+  w = seq(5, 25, 5),
+  x = seq(10, 50, 10),
+  y = seq(60, 100, 10),
+  z = seq(100, 500, 100)
+)
+
+df
+```
+
+As a reminder, `rowwise()` (like `group_by()`) changes how the other verbs work. Without `rowwise()`, the output of our `mutate()` call, below will be the same for every row (since it thinks you are selecting all of each column every time). With `rowwise()`, it will compute by row.
+
+```{r}
+#| label: rowwise-basic
+
+# WITHOUT `rowwise()`
+df |>
+  mutate(m = mean(c(w, x, y, z)))
+
+# WITH `rowwise()`
+df |>
+  rowwise() |>
+  mutate(m = mean(c(w, x, y, z)))
+```
+
+Typing all those variable names can get pretty annoying. Let's do our `rowwise()` mutate again, this time with `c_across()` and selecting our range of variables with `:`.
+
+```{r}
+#| label: rowwise-range
+df |>
+  rowwise() |>
+  mutate(m = mean(c_across(w:z)))
+```
+
+`rowwise()` is a special form of grouping (it groups *by* row). So, like `group_by()`, you can give it a grouping variable to preserve for each row. Below, we'll preserve `id` for each row. As always, you can use `mutate()` to add a new column to the data frame, or `summarise()` to get just the summary value. We can also use other tidyselect helpers in `c_across(),` such as `everything()` and `where(), which will produce the same results in the cases below`.
+
+```{r}
+#| label: grouped-rowwise
+df |> 
+  rowwise(id) |> 
+  mutate(total = sum(c_across(everything())))
+
+df |> 
+  rowwise(id) |> 
+  summarise(total = sum(c_across(where(is.numeric))))
+```
+
+## Learn more
+
+To learn more about working with rows in dplyr, see the [**Row-wise operations**](https://dplyr.tidyverse.org/articles/rowwise.html) vignette. For more on [row-oriented workflows in the tidyverse](https://github.com/jennybc/row-oriented-workflows#readme) with purrr, see Jenny Bryan's linked resources, as well as the purrr documentation for the [`pmap()`](https://purrr.tidyverse.org/reference/map2.html) family of functions.
