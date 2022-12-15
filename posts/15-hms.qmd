@@ -1,0 +1,64 @@
+---
+title: "Day 15: hms"
+date: "2022-12-15"
+description: | 
+  A simple class for durations or time-of-day values, hms lets you construct and work with **h**ours, **m**inutes, and **s**econds.
+reference-location: margin
+image: hms-thumb-min.png
+image-alt: "hms package hexagon logo on a light green background."
+editor: visual
+---
+
+Dates get a lot of hype, but sometimes what you're concerned about is time of the hours-minutes-seconds variety, which is where [**hms**](https://hms.tidyverse.org/) [@hms] comes to play. Though it has a handful of different [functions](https://hms.tidyverse.org/reference/index.html), the crux of the hms package is the *class* that it provides for storing durations or time-of-day values, and displaying them in the `hh:mm:ss` format.
+
+The `hms` class is based on the `difftime` class, and, like `difftime` data are stored as number of seconds since midnight (`00:00:00`). Thus, values can be converted to and from numeric with [`as.numeric()`](https://rdrr.io/r/base/numeric.html) and [`as_hms()`](https://hms.tidyverse.org/reference/hms.html).
+
+Below, we'll use [`parse_hms()`](https://hms.tidyverse.org/reference/parse_hms.html) (which accepts values as HH:MM:SS---and can include optional fractional seconds) to create hms values, look at their underlying numeric representation with `as.numeric()`, and then complete the round trip with `as_hms()`.
+
+```{r}
+#| label: hms-numeric
+#| collapse: true
+#| comment: "#>"
+library(hms)
+
+# text to hms
+times <- parse_hms(c("00:00:00.75", "00:00:05", "00:01:00", "01:00:00"))
+times
+
+# hms to numeric
+times_num <- as.numeric(times)
+times_num
+
+# numeric to hms
+as_hms(times_num)
+
+
+```
+
+You can also do coercion to and from types, such as `POSIXct`.
+
+```{r}
+#| label: posixct
+#| collapse: true
+#| comment: "#>"
+as.POSIXct(hms(1))
+```
+
+Note that, above, I've used the titular function [`hms()`](https://hms.tidyverse.org/reference/hms.html), which allows you to construct hms values from their component seconds, minutes, and hours. By position, the arguments go smallest to largest (from seconds to hours), but can also be named and/or include a `day` argument[^1].
+
+```{r}
+#| label: hms
+#| collapse: true
+#| comment: "#>"
+hms(30, 20, 1)
+
+hms(hours = 1, minutes = 20, seconds = 30)
+
+hms(hours = 1, minutes = 20, seconds = 30, days = 4)
+```
+
+## Learn more
+
+You can learn more about hms in the [package documentation](https://hms.tidyverse.org/index.html). If you're interested in *datetimes*, check out [lubridate](https://lubridate.tidyverse.org/) or [clock](https://clock.r-lib.org/).
+
+[^1]: Days will be converted to seconds (like any hms value), and displayed in normal hms format, `##:##:##.##`.
