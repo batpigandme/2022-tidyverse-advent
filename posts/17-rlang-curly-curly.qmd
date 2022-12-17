@@ -1,0 +1,62 @@
+---
+title: "Day 17: rlang's `{{ }}`"
+date: "2022-12-17"
+description: |
+  Wrap function arguments containing data-frame variables in rlang's embracing operator (`{{`) for simpler tidy eval of “data-masked” arguments in functions.
+image: curly-curly-thumb-min.png
+image-alt: "curly curly written in cursive above a pair of double curly braces that have stars on the ends of each brace."
+tags: 
+  - rlang
+reference-location: margin
+---
+
+Introduced in [rlang 0.4.0](https://www.tidyverse.org/blog/2019/06/rlang-0-4-0/), the [`{{`](https://rlang.r-lib.org/reference/embrace-operator.html) (read as curly curly, or the [embracing operator](https://rlang.r-lib.org/reference/embrace-operator.html)) can be used to write functions that call other data-masking functions. What's data masking? Well, according to the [rlang](https://rlang.r-lib.org/index.html) docs[^1]:
+
+> Data-masking is a distinctive feature of R whereby programming is performed directly on a data set, with columns defined as normal objects [@rlang].
+
+Data-masking makes it easier to program interactively with data frames by letting you pass column names as normal objects.
+
+Here's an example using base R's `with()` function, which allows you to evaluate an expression in a data environment:
+
+```{r}
+#| label: mask-w-with
+#| collapse: true
+#| comment: "#>"
+
+# No data masking
+mean(mtcars$cyl + mtcars$am)
+
+# With data masking
+with(mtcars, mean(cyl + am))
+```
+
+The functions tidyverse packages like ggplot2 and dplyr use data-masking to allow you to pass bare (unquoted) column names from the data frame as arguments. Though, as mentioned, this makes life easier for interactive programming, it means that writing functions that use data-masking functions requires special **interpolation** of variables (a pattern of quote-and-unquoting[^2]).
+
+So, what does this look like? When writing a function around a tidyverse pipeline, you *embrace* your data-frame variables in `{{ }}`. Let's say I want to write a function that calculates the mean *by* a group using dplyr's `group_by()` and `summarise()` functions. I'll need to interpolate the variables in those functions, since they are inside of the data mask.
+
+```{r}
+#| label: my-mean
+#| message: false
+library(tidyverse)
+
+mean_by <- function(data, var, by) {
+  data |>
+    group_by({{ by }}) |>
+    summarise(the_mean = mean({{ var }}, na.rm = TRUE))
+}
+
+mtcars |> 
+  mean_by(mpg, carb)
+```
+
+## Learn more
+
+For more details on `{{`, data-masking, and how they work, see [What is data-masking and why do I need `{{`?](https://rlang.r-lib.org/reference/topic-data-mask.html).
+
+For *even* more on data-masking and non-standard-evaluation patterns you can use with rlang's tidy evaluation framework, check out [Data mask programming patterns](https://rlang.r-lib.org/reference/topic-data-mask-programming.html) (and go even further with the other guides found in the Tidy-evaluation dropdown section of the [rlang docs](https://rlang.r-lib.org/index.html)).
+
+Want to use glue-like `{` and `{{` operators for *names* (as opposed to function arguments). Well, that's not what the bare embracing operator is for. However, you can still learn how to do that in [Name injection with `"{"` and `"{{"`](https://rlang.r-lib.org/reference/glue-operators.html).
+
+[^1]: More specifically, the topic page [What is data-masking and why do I need `{{`?](https://rlang.r-lib.org/reference/topic-data-mask.html)
+
+[^2]: Before `{{`, this required you to use the [`enquo()`](https://rlang.r-lib.org/reference/enquo.html) and [`!!`](https://rlang.r-lib.org/reference/injection-operator.html) operators.
