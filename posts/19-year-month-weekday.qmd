@@ -1,0 +1,34 @@
+---
+title: "Day 19: `year_month_weekday()`"
+date: "2022-12-19"
+description: "Get the nth occurrence of a given weekday in a month with clock's `year_month_weekday()` function."
+tags: 
+  - clock
+---
+
+Scheduling things is hard. With the exception of February (assuming it's not a leap year), the number of days in a month isn't even divisible by number of days in a week. So, if you're on a committee that meets once a month, you probably don't meet on the same numerical date each month, but, rather the *n*th occurrence of a given weekday. This is how most federal holidays are scheduled in the United States[^1]. [American Thanksgiving](https://en.wikipedia.org/wiki/Thanksgiving_(United_States)), for example, takes place on the fourth Thursday in November.
+
+So, how do we figure out when that is in terms of date? Well, the [clock](https://clock.r-lib.org/index.html) [@clock] package has you covered with the [`year_month_weekday()`](https://clock.r-lib.org/reference/year_month_weekday.html) function.
+
+> `year_month_weekday()` constructs a calendar vector from the Gregorian year, month, weekday, and index specifying that this is the n-th weekday of the month.
+
+Let's use it to figure out when Thanksgiving will be in 2023. The arguments for things like months and weekdays are meant to be integers, but clock has [integer codes](https://clock.r-lib.org/reference/clock-codes.html) mapping the names to numbers, which I'll make use of. To print it as an actual date (as opposed to the returned year-month-weekday calendar vector), we'll use [`as_date()`](https://clock.r-lib.org/reference/as_date.html).
+
+```{r}
+#| collapse: true
+#| comment: "#>"
+library(clock)
+
+x <- year_month_weekday(
+  year = 2023, 
+  month = clock_months$november, 
+  day = clock_weekdays$thursday,
+  index = 4
+)
+
+x
+
+x |> as_date()
+```
+
+[^1]: TIL this is thanks to the [Uniform Monday Holiday Act](https://en.wikipedia.org/wiki/Uniform_Monday_Holiday_Act), enacted in 1968.
