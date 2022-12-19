@@ -2,6 +2,8 @@
 title: "Day 19: `year_month_weekday()`"
 date: "2022-12-19"
 description: "Get the nth occurrence of a given weekday in a month with clock's `year_month_weekday()` function."
+image: year-month-weekday-thumb-min.png
+image-alt: "Code reads: year_month_weekday(year = 2023, month = clock_months$november, day = clock_weekdays$thursday, index = 4). Next to it is a calendar for November with the fourth Thursday circled."
 tags: 
   - clock
 ---
