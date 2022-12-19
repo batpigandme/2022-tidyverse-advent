@@ -1,0 +1,31 @@
+---
+title: "Day 18: brio"
+date: "2022-12-18"
+description: "brio (short for Basic R Input Output) provides functions to do just that--handle basic input output in R. Its functions always read and write UTF-8 files, and provide more explicit control over line endings."
+image: brio-thumb-min.png
+image-alt: "Teal rectangle that says brio above Basic R Input Output."
+tags: 
+  - brio
+reference-location: margin
+---
+
+String encoding in R (or any programming language for that matter) is no simple matter. Kevin Ushey wrote an excellent blog post, [String Encoding and R](https://kevinushey.github.io/blog/2018/02/21/string-encoding-and-r/), that:
+
+> is an attempt to explore, and answer, the surprisingly difficult question:
+>
+> > How do I write UTF-8 encoded content to a file? [@ushey2018]
+
+The aim of [brio](https://brio.r-lib.org/) [@brio] is to make that practice easier. brio (an initialism for Basic R Input Output) provides functions that always read and write UTF-8 files[^1], and provide more explicit control over line endings.
+
+In addition to providing consistency and control over encoding and line endings, brio's primary functions, [read_lines()](https://brio.r-lib.org/reference/read_lines.html) and [write_lines()](https://brio.r-lib.org/reference/write_lines.html), happen to be faster than their base R and readr equivalents (see the [benchmarks section](https://brio.r-lib.org/#benchmarks)) of the README for data), which is a nice added bonus.
+
+## Learn more
+
+The [brio documentation](https://brio.r-lib.org/) provides details on how to use its full suite of functions, including [drop-in replacements](https://brio.r-lib.org/#drop-ins) for base [`readLines()`](https://brio.r-lib.org/reference/readLines.html) and [`writeLines()`](https://brio.r-lib.org/reference/writeLines.html).
+
+To learn more on encoding and character sets, see the two articles Kevin recommends at the end of [his post on string encoding and R](https://kevinushey.github.io/blog/2018/02/21/string-encoding-and-r/):
+
+-   [The Absolute Minimum Every Software Developer Absolutely, Positively Must Know About Unicode and Character Sets (No Excuses!)](https://www.joelonsoftware.com/2003/10/08/the-absolute-minimum-every-software-developer-absolutely-positively-must-know-about-unicode-and-character-sets-no-excuses/) by Joel Spolsky [@spolsky2003]; and
+-   [What Every Programmer Absolutely, Positively Needs To Know About Encodings And Character Sets To Work With Text](https://kunststube.net/encoding/) by David C. Zentgraf [@zentgraf2015].
+
+[^1]: See Kevin's blog post to understand why this is a good idea.
