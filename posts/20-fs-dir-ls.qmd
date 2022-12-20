@@ -1,0 +1,57 @@
+---
+title: "Day 20: `fs::dir_ls()`"
+date: "2022-12-20"
+description: |
+  Equivalent to the `ls` command, `dir_ls()` returns filenames as a named character vector of `fs_paths`, making it perfect for passing into the `.id` argument of `purrr::map_df()`.
+image: fs-dir-ls-thumb-min.png
+image-alt: "fs::dir_ls() written in monospaced font on pink background."
+tags: 
+  - fs
+reference-location: margin
+---
+
+The [**fs**](https://fs.r-lib.org/) package [@fs] is built on the [libuv](http://docs.libuv.org/en/v1.x/fs.html) C library, and provides a cross-platform, uniform interface to file-system operations. **fs** functions fall into four main categories, each of which has its own function prefix:
+
+-   `path_` for manipulating and constructing paths;
+
+-   `file_` for files;
+
+-   `dir_` for directories; and
+
+-   `link_` for links
+
+[**`dir_ls()`**](https://fs.r-lib.org/reference/dir_ls.html) is equivalent to the Shell `ls` command. It returns filenames from the directory to which it is applied as a named `fs_path`[^1] character vector where the names are equivalent to the values. This is perfect for use with the `.id` argument of functions like [`purrr::map_df()`](https://purrr.tidyverse.org/reference/map.html) the output of which stores the name (if `.x` is named).
+
+Let's look at how we can use these functions together to read in a directory of CSVs with their filenames in the resulting data frame. In this example, I'll use data from [Basketball Reference](https://www.basketball-reference.com/playoffs/NBA_2022_totals.html) with player statistics from several years of NBA Playoffs.
+
+I'll start out by navigating to the directory using [`here::here()`](https://here.r-lib.org/reference/here.html), since it's located below my project root (as opposed to in the directory in which I'm writing this post).
+
+The target directory happens only to contain `.csv` files but, if it contained other filetypes, I could use the `glob` argument set to `"*.csv"` to restrict my results.
+
+```{r}
+library(fs)
+
+# get the files
+playoff_files <- dir_ls(here::here("data", "nba-playoffs"))
+
+# see the files
+playoff_files
+
+# read them into a single data frame with the filenames
+playoff_df <- playoff_files |> 
+  purrr::map_df(readr::read_csv, .id = "file", show_col_types = FALSE)
+
+
+# glimpse the resulting data frame
+dplyr::glimpse(playoff_df)
+```
+
+As you can see, the filenames are stored in my result, which means I can use those names to extract important data I would have otherwise lost (in this case, the year).
+
+## Learn more
+
+There's much more to fs than this one function, so it's well worth your time to check out the [**fs** intro](https://fs.r-lib.org/). Also be sure to peep [**Comparison of fs functions, base R, and shell commands**](https://fs.r-lib.org/articles/function-comparisons.html) for how those systems stack up.
+
+I would be remiss not to mention that there are *lots* of ways to read and combine multiple `.csv` files into one data frame in R. For an extensive (though not exhaustive) exploration of options, see the responses to the Stack Overflow question: [How to import multiple .csv files at once?](https://stackoverflow.com/questions/11433432/how-to-import-multiple-csv-files-at-once)
+
+[^1]: fs returns \'tidy\' paths that: always use `/` to delimit directories, and never have multiple `/` or trailing `/`.
