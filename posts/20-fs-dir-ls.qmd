@@ -2,7 +2,7 @@
 title: "Day 20: `fs::dir_ls()`"
 date: "2022-12-20"
 description: |
-  Equivalent to the `ls` command, `dir_ls()` returns filenames as a named character vector of `fs_paths`, making it perfect for passing into the `.id` argument of `purrr::map_df()`.
+  Equivalent to the `ls` command, `dir_ls()` returns filenames as a named character vector of `fs_paths`, making it perfect for passing into the `.id` argument of `purrr::map_df()` or the `names_to` argument of `purrr::list_rbind()`.
 image: fs-dir-ls-thumb-min.png
 image-alt: "fs::dir_ls() written in monospaced font on pink background."
 tags: 
@@ -48,10 +48,23 @@ dplyr::glimpse(playoff_df)
 
 As you can see, the filenames are stored in my result, which means I can use those names to extract important data I would have otherwise lost (in this case, the year).
 
+This works the same way using `purrr::map()` in combination with [purrr::list_rbind()](https://purrr.tidyverse.org/dev/reference/list_c.html)[^2] and the `names_to` argument to keep the file names. Here's what that looks like using the same `playoff_files` paths we retrieved with `fs::dir_ls()` before.
+
+```{r}
+playoff_files |> 
+  purrr::map(readr::read_csv, show_col_types = FALSE) |> 
+  purrr::list_rbind(names_to = "file") |> 
+  dplyr::glimpse()
+```
+
+The result is exactly the same!
+
 ## Learn more
 
 There's much more to fs than this one function, so it's well worth your time to check out the [**fs** intro](https://fs.r-lib.org/). Also be sure to peep [**Comparison of fs functions, base R, and shell commands**](https://fs.r-lib.org/articles/function-comparisons.html) for how those systems stack up.
 
 I would be remiss not to mention that there are *lots* of ways to read and combine multiple `.csv` files into one data frame in R. For an extensive (though not exhaustive) exploration of options, see the responses to the Stack Overflow question: [How to import multiple .csv files at once?](https://stackoverflow.com/questions/11433432/how-to-import-multiple-csv-files-at-once)
 
-[^1]: fs returns \'tidy\' paths that: always use `/` to delimit directories, and never have multiple `/` or trailing `/`.
+[^1]: fs returns 'tidy' paths that: always use `/` to delimit directories, and never have multiple `/` or trailing `/`.
+
+[^2]: The recommended method starting with purrr 1.0.0, which will have `map_df()` superseded.
