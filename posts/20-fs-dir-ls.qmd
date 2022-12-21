@@ -20,7 +20,7 @@ The [**fs**](https://fs.r-lib.org/) package [@fs] is built on the [libuv](http:/
 
 -   `link_` for links
 
-[**`dir_ls()`**](https://fs.r-lib.org/reference/dir_ls.html) is equivalent to the Shell `ls` command. It returns filenames from the directory to which it is applied as a named `fs_path`[^1] character vector where the names are equivalent to the values. This is perfect for use with the `.id` argument of functions like [`purrr::map_df()`](https://purrr.tidyverse.org/reference/map.html) the output of which stores the name (if `.x` is named).
+[**`dir_ls()`**](https://fs.r-lib.org/reference/dir_ls.html) is equivalent to the Shell `ls` command. It returns filenames from the directory to which it is applied as a named `fs_path`[^1] character vector where the names are equivalent to the values. This is perfect for use with the `.id` argument of functions like [`purrr::map_df()`](https://purrr.tidyverse.org/reference/map_dfr.html) the output of which stores the name (if `.x` is named).
 
 Let's look at how we can use these functions together to read in a directory of CSVs with their filenames in the resulting data frame. In this example, I'll use data from [Basketball Reference](https://www.basketball-reference.com/playoffs/NBA_2022_totals.html) with player statistics from several years of NBA Playoffs.
 
@@ -48,7 +48,7 @@ dplyr::glimpse(playoff_df)
 
 As you can see, the filenames are stored in my result, which means I can use those names to extract important data I would have otherwise lost (in this case, the year).
 
-This works the same way using `purrr::map()` in combination with [purrr::list_rbind()](https://purrr.tidyverse.org/dev/reference/list_c.html)[^2] and the `names_to` argument to keep the file names. Here's what that looks like using the same `playoff_files` paths we retrieved with `fs::dir_ls()` before.
+This works the same way using [`purrr::map()`](https://purrr.tidyverse.org/reference/map.html) in combination with [purrr::list_rbind()](https://purrr.tidyverse.org/reference/list_c.html)[^2] and the `names_to` argument to keep the file names. Here's what that looks like using the same `playoff_files` paths we retrieved with `fs::dir_ls()` before.
 
 ```{r}
 playoff_files |> 
@@ -67,4 +67,4 @@ I would be remiss not to mention that there are *lots* of ways to read and combi
 
 [^1]: fs returns 'tidy' paths that: always use `/` to delimit directories, and never have multiple `/` or trailing `/`.
 
-[^2]: The recommended method starting with purrr 1.0.0, which will have `map_df()` superseded.
+[^2]: The recommended method starting with [purrr 1.0.0](https://www.tidyverse.org/blog/2022/12/purrr-1-0-0/), is which `map_df*()` are superseded.
